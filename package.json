@@ -1,0 +1,25 @@
+{
+  "name": "microfrontend-marketplace",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "tsc index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matheusmr13/microfrontend-marketplace.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matheusmr13/microfrontend-marketplace/issues"
+  },
+  "homepage": "https://github.com/matheusmr13/microfrontend-marketplace#readme",
+  "dependencies": {
+    "@google-cloud/datastore": "^5.1.0",
+    "express": "^4.17.1",
+    "typescript": "^3.8.3"
+  }
+}
