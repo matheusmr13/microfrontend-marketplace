@@ -42,11 +42,11 @@ app.post('/task_test', async (req: any, res: any) => {
   console.info('task_test');
   await exec('mkdir testing', { cwd: '/tmp' });
   console.info('task_test2');
-  await exec('node --max-old-space-size=250 npm init --yes', { cwd: '/tmp/testing' });
+  await exec('node --max-old-space-size=100 `which npm` init --yes', { cwd: '/tmp/testing' });
   console.info('task_test3');
-  await exec('node --max-old-space-size=250 npm i npm-publish-build-test', { cwd: '/tmp/testing' });
+  await exec('node --max-old-space-size=100 `which npm` i npm-publish-build-test', { cwd: '/tmp/testing' });
   console.info('task_test4');
-  await exec('npx tree-cli -l 2 --base /tmp/testing');
+  await exec('node --max-old-space-size=100 `which npx` tree-cli -l 2 --base /tmp/testing');
   res.send('task response');
 });
 

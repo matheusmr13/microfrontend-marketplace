@@ -2,7 +2,7 @@ const {CloudTasksClient} = require('@google-cloud/tasks');
 
 async function createTask(
   project = 'microfrontend-marketplace', // Your GCP Project id
-  queue = 'test-queue', // Name of your Queue
+  queue = 'another-test-queue', // Name of your Queue
   location = 'us-east1', // The GCP region of your queue
   payload = 'Hello, World!', // The task HTTP request body
   inSeconds = 0 // Delay in task execution
