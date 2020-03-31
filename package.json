@@ -2,10 +2,15 @@
   "name": "microfrontend-marketplace",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
   "scripts": {
-    "start": "tsc index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "npm run build",
+    "pretest": "npm run build",
+    "posttest": "npm run lint",
+    "lint": "tslint -p .",
+    "start": "node ./dist/index.js",
+    "build": "tsc -p . --outDir ./dist",
+    "gcp-build": "npm run build",
+    "deploy": "npm run build && gcloud app deploy"
   },
   "repository": {
     "type": "git",
@@ -19,7 +24,9 @@
   "homepage": "https://github.com/matheusmr13/microfrontend-marketplace#readme",
   "dependencies": {
     "@google-cloud/datastore": "^5.1.0",
+    "@google-cloud/tasks": "^1.9.0",
     "express": "^4.17.1",
+    "npm-publish-build-test": "^0.1.0",
     "typescript": "^3.8.3"
   }
 }

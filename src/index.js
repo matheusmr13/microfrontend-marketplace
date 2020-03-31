@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,44 +35,67 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var task_1 = __importDefault(require("./task"));
 var express = require('express');
+var Datastore = require('@google-cloud/datastore').Datastore;
 var app = express();
-app.get('/', function (req, res) {
-    res.send('Hello World!');
-});
+var spawn = require('child_process').spawn;
+;
+var exec = function (command, _a) {
+    var _b = _a === void 0 ? {} : _a, cwd = _b.cwd, onStdout = _b.onStdout, onStderr = _b.onStderr, _c = _b.debug, debug = _c === void 0 ? true : _c;
+    return new Promise(function (resolve, reject) {
+        var spawnProcess = spawn(command, [], { shell: true, cwd: cwd });
+        if (onStdout || debug)
+            spawnProcess.stdout.on('data', onStdout || (function (data) { return process.stdout.write(data); }));
+        if (onStderr || debug)
+            spawnProcess.stderr.on('data', onStderr || (function (data) { return process.stderr.write(data); }));
+        spawnProcess.on('exit', function (code) {
+            if (code > 0) {
+                reject(code);
+                return;
+            }
+            resolve();
+        });
+    });
+};
+app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        task_1.default();
+        res.send('Hello World!');
+        return [2 /*return*/];
+    });
+}); });
+app.post('/task_test', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.info('task_test');
+                return [4 /*yield*/, exec('mkdir testing', { cwd: '/tmp' })];
+            case 1:
+                _a.sent();
+                console.info('task_test2');
+                return [4 /*yield*/, exec('npm init --yes', { cwd: '/tmp/testing' })];
+            case 2:
+                _a.sent();
+                console.info('task_test3');
+                return [4 /*yield*/, exec('npm i npm-publish-build-test', { cwd: '/tmp/testing' })];
+            case 3:
+                _a.sent();
+                console.info('task_test4');
+                return [4 /*yield*/, exec('npx tree-cli -l 2 --base /tmp/testing')];
+            case 4:
+                _a.sent();
+                res.send('task response');
+                return [2 /*return*/];
+        }
+    });
+}); });
 var server = app.listen(8080, function () {
     var host = server.address().address;
     var port = server.address().port;
     console.log("Example app listening at http://" + host + ":" + port);
 });
-// Imports the Google Cloud client library
-var Datastore = require('@google-cloud/datastore').Datastore;
-// Creates a client
-var datastore = new Datastore();
-function quickstart() {
-    return __awaiter(this, void 0, void 0, function () {
-        var kind, name, taskKey, task;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    kind = 'Task';
-                    name = 'sampletask1';
-                    taskKey = datastore.key([kind, name]);
-                    task = {
-                        key: taskKey,
-                        data: {
-                            description: 'Buy milk'
-                        }
-                    };
-                    // Saves the entity
-                    return [4 /*yield*/, datastore.save(task)];
-                case 1:
-                    // Saves the entity
-                    _a.sent();
-                    console.log("Saved " + task.key.name + ": " + task.data.description);
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-quickstart();
