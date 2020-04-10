@@ -17,19 +17,22 @@ ApplicationController.get('/:uuid', async(req, res) => {
 	res.json(application);
 });
 
-ApplicationController.get('/:uuid/microfrontends', async(req, res) => {
-	const [application] = await Application.find(req.params.uuid);
+ApplicationController.put('/:uuid', async(req, res) => {
+	let [application] = await Application.find(req.params.uuid);
 	if (!application) {
 		res.status(404).send();
 		return;
 	}
+
+	application = await application.update(req.body);
 	res.json(application.toJSON());
 });
 
 ApplicationController.post('/', async(req, res) => {
-	console.info(req.body)
 	const application = await Application.createApplication(req.body);
 	res.json(application.toJSON());
 });
+
+
 
 export default ApplicationController;

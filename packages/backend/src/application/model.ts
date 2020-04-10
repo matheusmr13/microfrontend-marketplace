@@ -1,7 +1,8 @@
 import { BaseEntity, Column, Entity } from "ts-datastore-orm";
 import { v4 as uuidv4 } from 'uuid';
+import dayJs from 'dayjs';
 
-import Microfrontend from '../microfrontend/model/microfrontend';
+import Microfrontend from 'microfrontend/model';
 
 interface IApplication {
 	name: string
@@ -14,6 +15,9 @@ class Application extends BaseEntity {
     
     @Column()
 	public name : string = '';
+
+	@Column()
+	public createdAt: string = '';
 
 	static async findJsonWithMicrofrontends(uuid: string) {
 		const [application] = await Application.find(uuid);
@@ -29,6 +33,7 @@ class Application extends BaseEntity {
 	static async createApplication(payload: IApplication) {
 		const application = Application.create({
 			...payload,
+			createdAt: dayJs().format(),
 			id: uuidv4()
 		});
 		await application.save();
@@ -40,6 +45,12 @@ class Application extends BaseEntity {
 			.filter("applicationId", "=", this.id)
 			.run();
 		return microfrontends;
+	}
+
+	async update(payload: IApplication) {
+		this.name = payload.name;
+		await this.save();
+		return this;
 	}
 
 
