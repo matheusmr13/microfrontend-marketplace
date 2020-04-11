@@ -3,10 +3,11 @@ import React from 'react';
 
 import useAxios from 'axios-hooks';
 import {
-	useParams,
+	useParams, Link
   } from "react-router-dom";
 
   import ApplicationForm from './form';
+  import { Form, Input, Button, Select, Card, Typography, Divider } from 'antd';
 
   
 function ApplicationDetails () {
@@ -17,7 +18,10 @@ function ApplicationDetails () {
 	if (loading) return <div>loading</div>;
 
 	return (
-	<ApplicationForm application={application} />  
+		<div>
+			<a target="_blank" href={`http://localhost:8080/applications/${applicationId}/meta`}> Meta.json</a>
+			<ApplicationForm application={application} />  
+		</div>
 	);
   }
 

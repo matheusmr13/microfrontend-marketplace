@@ -75,6 +75,15 @@ class Microfrontend extends BaseEntity {
 		return versions;
 	}
 
+	async getCurrentVersion() {
+		const [version] = await Version.query()
+			.filter("microfrontendId", "=", this.id)
+			// .filter("status", "=", Version.STATUS.APPROVED)
+			.run();
+
+		return version.filter(v => v.status === Version.STATUS.APPROVED)[0];
+	}
+
 	// async getMetadata() {
 	// 	const [deployedVersions] = await Version.findMany(this.deployedVersionsIds);
 

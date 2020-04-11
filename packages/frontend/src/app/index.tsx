@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 
 import './fetch';
+import Version from '../modules/version';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route exact path="/"><Link to="/application">Apps</Link></Route>
         <Route path="/application"><Application /></Route>
         <Route path="/microfrontend"><Microfrontend /></Route>
+        <Route path="/version"><Version /></Route>
       </Switch>
     </Router>
   );

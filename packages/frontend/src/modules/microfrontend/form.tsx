@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useAxios from 'axios-hooks';
   
 import {
-	Redirect, Link, useLocation
+	Redirect, Link, useLocation,useHistory
   } from "react-router-dom";
   import { Form, Input, Button, Select, Card, Typography, Divider } from 'antd';
 
@@ -17,6 +17,8 @@ const NewMicrofrontend : React.FC<{
 	microfrontend:any
 }> = ({ microfrontend }) => {
 	const isNew = !microfrontend.id;
+	const history = useHistory();
+
 	const [{ data : result, loading, error }, createmicrofrontend] = useAxios({
 		url: `/microfrontends${isNew ? '' : `/${microfrontend.id}`}`,
 		method: isNew ? 'POST' : 'PUT'
@@ -32,6 +34,7 @@ const NewMicrofrontend : React.FC<{
 				applicationId
 			},
 		});
+		history.goBack();
 	};
   
 	const onFinishFailed = (errorInfo : any) => {
@@ -39,7 +42,7 @@ const NewMicrofrontend : React.FC<{
 	};
 
 
-	if (result) return <Redirect to="/microfrontend" />
+	if (result) return null
 
 	return (
 		<Card title={isNew ? 'Creating' : `Editing ${microfrontend.name}`} style={{ margin: '32px'}}>
@@ -75,6 +78,26 @@ const NewMicrofrontend : React.FC<{
 				</Button>
 			</Form.Item>
 			</Form>
+
+			{
+				isNew ? null : (
+					<>
+						<Typography>
+							<Title>Micros</Title>
+						</Typography>
+							<div className="Application__microfrontend-list">
+								<Card title="Create version" extra={<Link to={`/version/new?microfrontendId=${microfrontend.id}`} >New</Link>} style={{ width: 300, marginRight: '18px'  }}>
+									Create version
+								</Card>
+								{microfrontend.versions.map((version: any) => (
+									<Card title={version.name} extra={<Link to={`/version/${version.id}`} >Edit</Link>} style={{ width: 300, marginRight: '18px'  }}>
+										{version.name}
+									</Card>
+								))}
+							</div>
+					</>
+				)
+			}
 		</Card>
 	)
   }

@@ -17,6 +17,17 @@ ApplicationController.get('/:uuid', async(req, res) => {
 	res.json(application);
 });
 
+ApplicationController.get('/:uuid/meta', async(req, res) => {
+	const [application] = await Application.find(req.params.uuid);
+	if (!application) {
+		res.status(404).send();
+		return;
+	}
+
+	const meta = await application.getMeta();
+	res.json(meta);
+});
+
 ApplicationController.put('/:uuid', async(req, res) => {
 	let [application] = await Application.find(req.params.uuid);
 	if (!application) {

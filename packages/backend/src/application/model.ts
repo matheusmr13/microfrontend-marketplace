@@ -53,6 +53,29 @@ class Application extends BaseEntity {
 		return this;
 	}
 
+	async getMeta() {
+		const [microfrontends] = await Microfrontend.query()
+			.filter("applicationId", "=", this.id)
+			.run();
+
+		const meta = {};
+
+		const microfrontendFiles = await Promise.all(microfrontends.map(async (microfrontend) => {
+			const version = await microfrontend.getCurrentVersion();
+			console.info(version);
+			return {
+				name: microfrontend.name,
+				files: version?.files
+			}
+		}));
+
+		
+		const asd =  microfrontendFiles
+			.filter(microFile => !!microFile.files)
+			.reduce((agg, microFile) => Object.assign(agg, {[microFile.name]: microFile.files}), {})
+			console.info(asd)
+		return asd
+	}
 
 }
 

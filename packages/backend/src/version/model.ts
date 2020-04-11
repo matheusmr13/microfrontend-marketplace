@@ -23,7 +23,7 @@ class Version extends BaseEntity {
 
 	static STATUS = STATUS;
 
-    @Column()
+    @Column({ index: true })
     public id: string = '';
     
 
@@ -33,7 +33,7 @@ class Version extends BaseEntity {
     @Column()
 	public name: string = '';
 	
-	@Column()
+	@Column({ index: true })
 	public status: STATUS = STATUS.NEEDS_APROVAL;
 
 	@Column()
@@ -52,12 +52,17 @@ class Version extends BaseEntity {
 		return version;
 	}
 
-	static async approve(id: string) {
-		const [version] = await Version.find(id);
-		if (!version) throw new Error();
-		version.status = STATUS.APPROVED;
-		await version.save();
-		return version;
+	async update(payload: IVersion) {
+		this.name = payload.name;
+		this.files = payload.files;
+		await this.save();
+		return this;
+	}
+
+	async approve() {
+		this.status = STATUS.APPROVED;
+		await this.save();
+		return this;
 	}
 }
 export default Version;
