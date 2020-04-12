@@ -1,0 +1,1 @@
+{"version":3,"sources":["list.css"],"names":[],"mappings":"AAAA,iBACC,YAAa,CACb,YACD,CAEA,iCACC,YACD","file":"main.4f39c3e2.chunk.css","sourcesContent":[".ApplicationList {\n\tdisplay: flex;\n\tpadding: 32px;\n}\n\n.Application__microfrontend-list {\n\tdisplay: flex;\n}"]}
