@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import useAxios from 'axios-hooks';
+import { useLoggedApiRequest } from 'base/hooks/request';
 import {
 	useParams, Link
   } from "react-router-dom";
@@ -12,7 +12,7 @@ import {
   
 function ApplicationDetails () {
 	let { applicationId } = useParams();
-	const [{ data : application, loading, error }, refetch] = useAxios(`/applications/${applicationId}`);
+	const [{ data : application, loading, error }, refetch] = useLoggedApiRequest(`/applications/${applicationId}`);
 
 
 	if (loading) return <div>loading</div>;

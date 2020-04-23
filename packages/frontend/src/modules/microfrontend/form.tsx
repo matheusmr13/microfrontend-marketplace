@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import useAxios from 'axios-hooks';
+import { useLoggedApiRequest } from 'base/hooks/request';
   
 import {
 	Redirect, Link, useLocation,useHistory
   } from "react-router-dom";
-  import { Form, Input, Button, Select, Card, Typography, Divider } from 'antd';
-
+  import { Form, Input, Button, Select, Card, Typography, Timeline, Table } from 'antd';
+import useQuery from 'base/hooks/query-param';
   const { Title, Paragraph, Text } = Typography;
   const { Option } = Select;
 
-  function useQuery() {
-	return new URLSearchParams(useLocation().search);
-  }
+  
 
 const NewMicrofrontend : React.FC<{
 	microfrontend:any
@@ -19,7 +17,7 @@ const NewMicrofrontend : React.FC<{
 	const isNew = !microfrontend.id;
 	const history = useHistory();
 
-	const [{ data : result, loading, error }, createmicrofrontend] = useAxios({
+	const [{ data : result, loading, error }, createmicrofrontend] = useLoggedApiRequest({
 		url: `/microfrontends${isNew ? '' : `/${microfrontend.id}`}`,
 		method: isNew ? 'POST' : 'PUT'
 	}, { manual: true});
@@ -40,6 +38,38 @@ const NewMicrofrontend : React.FC<{
 	const onFinishFailed = (errorInfo : any) => {
 	  console.log('Failed:', errorInfo);
 	};
+
+	const columns = [
+		{
+		  title: 'Created at',
+		  dataIndex: 'createdAt',
+		  key: 'createdAt'
+		},
+		{
+		  title: 'Name',
+		  dataIndex: 'name',
+		  key: 'name',
+		},
+		{
+			title: 'Status',
+			dataIndex: 'status',
+			key: 'status',
+		  },
+		{
+		  title: 'Action',
+		  render: (asd: any) => {
+		  	return <span>
+				  <Button>Aprove</Button>
+				</span>
+		  },
+		//   render: (text, record) => (
+		// 	<span>
+		// 	  <a style={{ marginRight: 16 }}>Invite {record.name}</a>
+		// 	  <a>Delete</a>
+		// 	</span>
+		//   ),
+		},
+	  ];
 
 
 	if (result) return null
@@ -82,19 +112,15 @@ const NewMicrofrontend : React.FC<{
 			{
 				isNew ? null : (
 					<>
-						<Typography>
-							<Title>Micros</Title>
-						</Typography>
-							<div className="Application__microfrontend-list">
-								<Card title="Create version" extra={<Link to={`/version/new?microfrontendId=${microfrontend.id}`} >New</Link>} style={{ width: 300, marginRight: '18px'  }}>
-									Create version
-								</Card>
-								{microfrontend.versions.map((version: any) => (
-									<Card title={version.name} extra={<Link to={`/version/${version.id}`} >Edit</Link>} style={{ width: 300, marginRight: '18px'  }}>
-										{version.name}
-									</Card>
-								))}
-							</div>
+						<Title>Versions</Title>
+						<Table columns={columns} dataSource={microfrontend.versions.map((v: any) => ({ ...v, key: v.id}))} />
+
+						<Title>History</Title>
+						<Timeline>
+							{microfrontend.versions.map((version : any) => (
+								<Timeline.Item key={version.id} color="green">Version {version.name} created at {version.createdAt}</Timeline.Item>
+							))}
+						</Timeline>
 					</>
 				)
 			}

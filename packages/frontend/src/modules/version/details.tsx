@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import useAxios from 'axios-hooks';
+import { useLoggedApiRequest } from 'base/hooks/request';
 import {
 	useParams,
   } from "react-router-dom";
@@ -11,7 +11,7 @@ import {
   
 function VersionDetails () {
 	let { versionId } = useParams();
-	const [{ data : version, loading, error }, refetch] = useAxios(`/versions/${versionId}`);
+	const [{ data : version, loading, error }, refetch] = useLoggedApiRequest(`/versions/${versionId}`);
 
 
 	if (loading) return <div>loading</div>;

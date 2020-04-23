@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import useAxios from 'axios-hooks';
+import { useLoggedApiRequest } from 'base/hooks/request';
 
 import { Link } from "react-router-dom";
   
-import './list.css';
-import { Card } from 'antd';
+import { Card, Button } from 'antd';
+import Page from 'base/components/page';
+import { List } from 'antd';
 
 
 
@@ -19,7 +20,8 @@ const ApplicationCard : React.FC<{
 }
 
 function ApplicationList() {
-	const [{ data : applications, loading, error }, refetch] = useAxios('/applications', { manual: true });
+	console.info('list application')
+	const [{ data : applications, loading, error }, refetch] = useLoggedApiRequest('/applications', { manual: true });
 
 	useEffect(() => {
 		refetch();
@@ -27,14 +29,33 @@ function ApplicationList() {
 
 	if (!applications) return null;
 	return (
-	  <div className="ApplicationList">
-		<Card title="Create application" extra={<Link to="/application/new">New</Link>} style={{ width: 300, marginRight: '18px'  }}>
-			Create application
-		</Card>
-		{applications.map((application: any) => (
-			<ApplicationCard key={application.id} application={application} />
-		))}
-	  </div>
+	  <Page
+			  title="Applications"
+			  actions={[<Button type="primary">New</Button>]}
+		>
+		  <List
+			itemLayout="vertical"
+			size="large"
+			dataSource={applications}
+			renderItem={(application:any) => ( 
+				<List.Item
+					key={application.id}
+					actions={[
+						// <IconText icon={StarOutlined} text={repo.stargazers_count} key="list-vertical-star-o" />,
+						// <IconText icon={MessageOutlined} text={repo.open_issues} key="list-vertical-message" />,
+					]}
+					extra={<Link to={`./application/${application.id}`}>Edit</Link>}
+				>
+					<List.Item.Meta
+					// avatar={<Avatar icon={<GithubOutlined />} />}
+						title={application.name}
+						description={application.description}
+					/>
+					{'asd'}
+			</List.Item>
+			)}
+		/>
+	  </Page>
 	);
   }
 

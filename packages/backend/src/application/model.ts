@@ -17,6 +17,9 @@ class Application extends BaseEntity {
 	public name : string = '';
 
 	@Column()
+	public githubId : string = '';
+
+	@Column()
 	public createdAt: string = '';
 
 	static async findJsonWithMicrofrontends(uuid: string) {
@@ -33,6 +36,17 @@ class Application extends BaseEntity {
 	static async createApplication(payload: IApplication) {
 		const application = Application.create({
 			...payload,
+			createdAt: dayJs().format(),
+			id: uuidv4()
+		});
+		await application.save();
+		return application;
+	}
+
+	static async createApplicationFromRepository(repository: any) {
+		const application = Application.create({
+			name: repository.name,
+			githubId: repository.full_name,
 			createdAt: dayJs().format(),
 			id: uuidv4()
 		});

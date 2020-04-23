@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import useAxios from 'axios-hooks';
+import { useLoggedApiRequest } from 'base/hooks/request';
 import {
 	useParams,
   } from "react-router-dom";
@@ -11,7 +11,7 @@ import {
   
 function MicrofrontendDetails () {
 	let { microfrontendId } = useParams();
-	const [{ data : microfrontend, loading, error }, refetch] = useAxios(`/microfrontends/${microfrontendId}`);
+	const [{ data : microfrontend, loading, error }, refetch] = useLoggedApiRequest(`/microfrontends/${microfrontendId}`);
 
 
 	if (loading) return <div>loading</div>;

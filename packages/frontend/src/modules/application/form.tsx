@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import useAxios from 'axios-hooks';
+import { useLoggedApiRequest } from 'base/hooks/request';
   
 import {
 	Redirect, Link
   } from "react-router-dom";
-  import { Form, Input, Button, Select, Card, Typography, Divider } from 'antd';
+  import { Form, Input, Button, Select, Card, Typography, Divider, Space } from 'antd';
 
   const { Title, Paragraph, Text } = Typography;
   const { Option } = Select;
@@ -13,10 +13,19 @@ const NewApplication : React.FC<{
 	application:any
 }> = ({ application }) => {
 	const isNew = !application.id;
-	const [{ data : result, loading, error }, createApplication] = useAxios({
+	const [{ data : result, loading, error }, createApplication] = useLoggedApiRequest({
 		url: `/applications${isNew ? '' : `/${application.id}`}`,
 		method: isNew ? 'POST' : 'PUT'
 	}, { manual: true});
+
+	const [_, publishApplication] = useLoggedApiRequest({
+		url: `/applications/${application.id}/publish`,
+		method: isNew ? 'POST' : 'PUT'
+	}, { manual: true});
+
+	useLoggedApiRequest({
+		url: `/users`,
+	})
 
   
 	const onFinish = async (values :any) => {
@@ -29,8 +38,11 @@ const NewApplication : React.FC<{
 	  console.log('Failed:', errorInfo);
 	};
 
+	const handlePublishClick = async () => {
+		await publishApplication();
+	}
 
-	if (result) return <Redirect to="/application" />
+	if (!loading && result) return <Redirect to="../application" />
 
 	return (
 		<Card title={isNew ? 'Creating' : `Editing ${application.name}`} style={{ margin: '32px'}}>
@@ -61,9 +73,14 @@ const NewApplication : React.FC<{
 				</Form.Item> */}
 
 			<Form.Item>
-				<Button type="primary" htmlType="submit">
-					Save
-				</Button>
+				<Space>
+					<Button type="primary" htmlType="submit">
+						Save
+					</Button>
+					<Button type="ghost" onClick={handlePublishClick}>
+						WriteFile
+					</Button>
+				</Space>
 			</Form.Item>
 			</Form>
 
@@ -75,7 +92,7 @@ const NewApplication : React.FC<{
 							<Title>Micros</Title>
 						</Typography>
 							<div className="Application__microfrontend-list">
-								<Card title="Create microfrontend" extra={<Link to={`/microfrontend/new?applicationId=${application.id}`} >New</Link>} style={{ width: 300, marginRight: '18px'  }}>
+								<Card title="Create microfrontend" extra={<Link to={`/microfrontend/new?applicationId=${application.id}`}>New</Link>} style={{ width: 300, marginRight: '18px'  }}>
 									Create microfrontend
 								</Card>
 								{application.microfrontends.map((microfrontend: any) => (

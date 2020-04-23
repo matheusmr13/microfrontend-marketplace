@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useAxios from 'axios-hooks';
+import { useLoggedApiRequest } from 'base/hooks/request';
   
 import {
 	Redirect, useLocation,useHistory
@@ -20,12 +20,12 @@ const NewVersion : React.FC<{
 }> = ({ version }) => {
 	const isNew = !version.id;
 	const history = useHistory();
-	const [{ data : result, loading, error }, createVersion] = useAxios({
+	const [{ data : result, loading, error }, createVersion] = useLoggedApiRequest({
 		url: `/versions${isNew ? '' : `/${version.id}`}`,
 		method: isNew ? 'POST' : 'PUT'
 	}, { manual: true});
 
-	const [_, approveVersion] = useAxios({
+	const [_, approveVersion] = useLoggedApiRequest({
 		url: `/versions/${version.id}/approve`,
 		method: 'PUT'
 	}, { manual: true} );

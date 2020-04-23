@@ -8,18 +8,18 @@ import {
 import Details from './details';
 import List from './list';
 import New from './new';
+import Import from './import';
 
 function ApplicationHome() {
 	let match = useRouteMatch();
   
 	return (
-	  <div>
-		<Switch>
-		  <Route exact path={`${match.path}/new`}><New /></Route>
-		  <Route path={`${match.path}/:applicationId`}><Details /></Route>
-		  <Route path={match.path}><List /></Route>
-		</Switch>
-	  </div>
+	<Switch>
+	<Route exact path={`${match.path}/new`}><New /></Route>
+	<Route exact path={`${match.path}/import`}><Import /></Route>
+	<Route path={`${match.path}/:applicationId`}><Details /></Route>
+	<Route path={match.path}><List /></Route>
+	</Switch>
 	);
   }
 
