@@ -1,99 +1,107 @@
-import React, { useState } from 'react';
-import { useLoggedApiRequest } from 'base/hooks/request';
-  
-import {
-	Redirect, useLocation,useHistory
-  } from "react-router-dom";
-  import { Form, Input, Button, Select, Card, Typography, Divider } from 'antd';
-  import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useState } from "react";
+import { useLoggedApiRequest } from "base/hooks/request";
 
+import { Redirect, useLocation, useHistory } from "react-router-dom";
+import { Form, Input, Button, Select, Card, Typography, Divider } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
-  const { Title, Paragraph, Text } = Typography;
-  const { Option } = Select;
+const { Title, Paragraph, Text } = Typography;
+const { Option } = Select;
 
-  function useQuery() {
-	return new URLSearchParams(useLocation().search);
-  }
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
-const NewVersion : React.FC<{
-	version:any
+const NewVersion: React.FC<{
+  version: any;
 }> = ({ version }) => {
-	const isNew = !version.id;
-	const history = useHistory();
-	const [{ data : result, loading, error }, createVersion] = useLoggedApiRequest({
-		url: `/versions${isNew ? '' : `/${version.id}`}`,
-		method: isNew ? 'POST' : 'PUT'
-	}, { manual: true});
+  const isNew = !version.id;
+  const history = useHistory();
+  const [{ data: result, loading, error }, createVersion] = useLoggedApiRequest(
+    {
+      url: `/versions${isNew ? "" : `/${version.id}`}`,
+      method: isNew ? "POST" : "PUT",
+    },
+    { manual: true }
+  );
 
-	const [_, approveVersion] = useLoggedApiRequest({
-		url: `/versions/${version.id}/approve`,
-		method: 'PUT'
-	}, { manual: true} );
+  const [_, approveVersion] = useLoggedApiRequest(
+    {
+      url: `/versions/${version.id}/approve`,
+      method: "PUT",
+    },
+    { manual: true }
+  );
 
-	const microfrontendId = useQuery().get('microfrontendId');
-  
-	const onFinish = async (values :any) => {
-		const { files, ...rest } = values;
-		const { jsFiles, cssFiles } = files.reduce((agg: any,file : string) => {
-			if (file.endsWith('.css')) agg.cssFiles.push(file);
-			if (file.endsWith('.js')) agg.jsFiles.push(file);
-			return agg;
-		}, { jsFiles: [], cssFiles: []});
-		await createVersion({
-			data: {
-				...rest,
-				files: {
-					js: jsFiles,
-					css: cssFiles
-				},
-				microfrontendId
-			},
-		});
-		history.goBack();
-	};
-  
-	const onFinishFailed = (errorInfo : any) => {
-	  console.log('Failed:', errorInfo);
-	};
+  const microfrontendId = useQuery().get("microfrontendId");
 
-	const handleApprove = async () => {
-		await approveVersion();
-	}
+  const onFinish = async (values: any) => {
+    const { files, ...rest } = values;
+    const { jsFiles, cssFiles } = files.reduce(
+      (agg: any, file: string) => {
+        if (file.endsWith(".css")) agg.cssFiles.push(file);
+        if (file.endsWith(".js")) agg.jsFiles.push(file);
+        return agg;
+      },
+      { jsFiles: [], cssFiles: [] }
+    );
+    await createVersion({
+      data: {
+        ...rest,
+        files: {
+          js: jsFiles,
+          css: cssFiles,
+        },
+        microfrontendId,
+      },
+    });
+    history.goBack();
+  };
 
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
+  };
 
-	if (result) return null
+  const handleApprove = async () => {
+    await approveVersion();
+  };
 
-	return (
-		<Card title={isNew ? 'Creating' : `Editing ${version.name}`} style={{ margin: '32px'}}>
-			<Form
-			labelCol={{ span: 2}}
-			name="basic"
-			onFinish={onFinish}
-			onFinishFailed={onFinishFailed}
-			>
-			<Form.Item
-				label="Name"
-				name="name"
-				rules={[{ required: true, message: 'Your version name.' }]}
-			>
-				<Input />
-			</Form.Item>
+  if (result) return null;
 
-			{version.status}
+  return (
+    <Card
+      title={isNew ? "Creating" : `Editing ${version.name}`}
+      style={{ margin: "32px" }}
+    >
+      <Form
+        labelCol={{ span: 2 }}
+        name="basic"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+      >
+        <Form.Item
+          label="Name"
+          name="name"
+          rules={[{ required: true, message: "Your version name." }]}
+        >
+          <Input />
+        </Form.Item>
 
-			<Form.Item>
-				<Button type="primary" htmlType="submit">
-					Save
-				</Button>
-				{ version.status === 'NEEDS_APROVAL' && (
-					<Button type="default" onClick={handleApprove} >
-						Approve
-					</Button>
-				)}
-			</Form.Item>
-			</Form>
-		</Card>
-	)
-  }
+        {version.status}
 
-  export default NewVersion;
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Save
+          </Button>
+          {version.status === "NEEDS_APROVAL" && (
+            <Button type="default" onClick={handleApprove}>
+              Approve
+            </Button>
+          )}
+        </Form.Item>
+      </Form>
+    </Card>
+  );
+};
+
+export default NewVersion;

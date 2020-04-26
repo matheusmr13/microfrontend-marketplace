@@ -1,5 +1,5 @@
-import { promises as fs, existsSync, rmdirSync } from 'fs';
-import path from 'path';
+import { promises as fs, existsSync, rmdirSync } from "fs";
+import path from "path";
 
 export const mkdir = (dir: string) => fs.mkdir(dir, { recursive: true });
 export const isDirectory = async (source: string) => {
@@ -20,17 +20,19 @@ export const copyFolder = async (src: string, dest: string) => {
 
   const files = await fs.readdir(src);
 
-  return Promise.all(files.map(async (file) => {
-    const srcFile = `${src}/${file}`;
-    const destFile = `${dest}/${file}`;
+  return Promise.all(
+    files.map(async (file) => {
+      const srcFile = `${src}/${file}`;
+      const destFile = `${dest}/${file}`;
 
-    const isDir = await isDirectory(srcFile);
-    if (isDir) {
-      await copyFolder(srcFile, destFile);
-    } else {
-      await copyFile(srcFile, destFile);
-    }
-  }));
+      const isDir = await isDirectory(srcFile);
+      if (isDir) {
+        await copyFolder(srcFile, destFile);
+      } else {
+        await copyFile(srcFile, destFile);
+      }
+    })
+  );
 };
 
 export const readJson = async (pathToFile: string) => {
@@ -44,11 +46,12 @@ export const writeFile = async (pathToFile: string, content: string) => {
   await fs.writeFile(pathToFile, content);
 };
 
-export const writeJson = async (pathToFile: string, json: any) => writeFile(pathToFile, JSON.stringify(json, null, 2));
+export const writeJson = async (pathToFile: string, json: any) =>
+  writeFile(pathToFile, JSON.stringify(json, null, 2));
 
 export const getDirsFrom = async (source: string) => {
   const paths = await fs.readdir(source);
-  return paths.map(name => path.join(source, name)).filter(isDirectory);
+  return paths.map((name) => path.join(source, name)).filter(isDirectory);
 };
 
 export const rm = async (pathTo: string) => {
@@ -63,28 +66,33 @@ export const rm = async (pathTo: string) => {
 
 export const getDirectories = async (source: string) => {
   const all = await fs.readdir(source);
-  const mappedFolders = await Promise.all(all.map(async fileOrFolder => ({
-    fileOrFolder,
-    isDirectory: await isDirectory(path.join(source, fileOrFolder)),
-  })));
+  const mappedFolders = await Promise.all(
+    all.map(async (fileOrFolder) => ({
+      fileOrFolder,
+      isDirectory: await isDirectory(path.join(source, fileOrFolder)),
+    }))
+  );
 
   return mappedFolders
     .filter(({ isDirectory: isDir }) => isDir)
     .map(({ fileOrFolder: folder }) => folder);
 };
 
-export const mv = async (origin:string, dest: string) => fs.rename(origin, dest);
-export const getAllFilesFromDir = async (dir: string, allFiles : any = []) => {
+export const mv = async (origin: string, dest: string) =>
+  fs.rename(origin, dest);
+export const getAllFilesFromDir = async (dir: string, allFiles: any = []) => {
   const all = await fs.readdir(dir);
 
-  await Promise.all(all.map(async (fileOrFolder) => {
-    const fullDir = `${dir}/${fileOrFolder}`;
-    const isDir = await isDirectory(fullDir);
-    if (isDir) {
-      await getAllFilesFromDir(fullDir, allFiles);
-    } else {
-      allFiles.push(fullDir);
-    }
-  }));
+  await Promise.all(
+    all.map(async (fileOrFolder) => {
+      const fullDir = `${dir}/${fileOrFolder}`;
+      const isDir = await isDirectory(fullDir);
+      if (isDir) {
+        await getAllFilesFromDir(fullDir, allFiles);
+      } else {
+        allFiles.push(fullDir);
+      }
+    })
+  );
   return allFiles;
 };

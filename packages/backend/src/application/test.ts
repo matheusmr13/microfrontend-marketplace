@@ -1,7 +1,6 @@
 // const axios = require('axios');
 // const { promises: fs } = require('fs');
 
-
 // const isDirectory = async (source) => {
 // 	const stat = await fs.stat(source);
 // 	return stat.isDirectory();
@@ -9,7 +8,7 @@
 
 // const getAllFilesFromDir = async (dir, allFiles = []) => {
 // 	const all = await fs.readdir(dir);
-  
+
 // 	await Promise.all(all.map(async (fileOrFolder) => {
 // 	  const fullDir = `${dir}/${fileOrFolder}`;
 // 	  const isDir = await isDirectory(fullDir);
@@ -30,7 +29,7 @@
 // 			}
 // 		});
 
-// 		console.info(a);		
+// 		console.info(a);
 
 // 		return;
 // 		await axios({
@@ -51,15 +50,14 @@
 // 			}
 // 		});
 
-
 // 		for (var i = 0; i < files.length; i++) {
 // 			const file = files[i];
 // 			const githubPath = file.replace('/Users/matheus.martins/projetos/personal/github-pages-as-repo/build', '');
 // 			const url = `https://api.github.com/repos/matheusmr13/github-pages-as-bucket/contents${githubPath}`;
-	
+
 // 			const fileContent = await fs.readFile(file);
 // 			console.info(url);
-		
+
 // 			// return Promise.resolve();
 // 			console.info('fazendo again')
 // 			await axios({
@@ -82,9 +80,6 @@
 // 			console.error(e);
 // 		}
 
-		
-
-
 // 	// ghpages.publish('build', {
 // 	// 	dest: `versions/${packageJson.version}`
 // 	// }, () => {
@@ -102,7 +97,6 @@
 
 // // 	console.info(result);
 // // }
-
 
 // const run = async() =>{
 // 	const files  = await getAllFilesFromDir('/Users/matheus.martins/projetos/personal/github-pages-as-repo/build');

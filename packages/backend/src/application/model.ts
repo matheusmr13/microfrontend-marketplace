@@ -1,93 +1,101 @@
 import { BaseEntity, Column, Entity } from "ts-datastore-orm";
-import { v4 as uuidv4 } from 'uuid';
-import dayJs from 'dayjs';
+import { v4 as uuidv4 } from "uuid";
+import dayJs from "dayjs";
 
-import Microfrontend from 'microfrontend/model';
+import Microfrontend from "microfrontend/model";
 
 interface IApplication {
-	name: string,
-	packageName: string
+  name: string;
+  packageName: string;
 }
 
-@Entity({namespace: "testing", kind: "application"})
+@Entity({ namespace: "testing", kind: "application" })
 class Application extends BaseEntity {
-    @Column({ index: true })
-    public id: string = '';
-    
-    @Column()
-	public name : string = '';
+  @Column({ index: true })
+  public id: string = "";
 
-	@Column()
-	public githubId : string = '';
+  @Column()
+  public name: string = "";
 
-	@Column()
-	public packageName : string = '';
+  @Column()
+  public githubId: string = "";
 
-	@Column({ index: true })
-	public ownerId : string = '';
+  @Column()
+  public packageName: string = "";
 
-	@Column()
-	public createdAt: string = '';
+  @Column({ index: true })
+  public ownerId: string = "";
 
-	static async findJsonWithMicrofrontends(uuid: string) {
-		const [application] = await Application.find(uuid);
-		if (!application) return null;
+  @Column()
+  public createdAt: string = "";
 
-		const microfrontends = await application.getMicrofrontends();
-		return {
-			...(application?.toJSON()),
-			microfrontends: microfrontends.map(micro => micro.toJSON())
-		}
-	}
-	
-	static async createFromRepository(repository: any, payload: IApplication, ownerId: string) {
-		const application = Application.create({
-			name: repository.name,
-			githubId: repository.full_name,
-			packageName: payload.packageName,
-			ownerId,
-			createdAt: dayJs().format(),
-			id: uuidv4()
-		});
-		await application.save();
-		return application;
-	}
+  static async findJsonWithMicrofrontends(uuid: string) {
+    const [application] = await Application.find(uuid);
+    if (!application) return null;
 
-	async getMicrofrontends() {
-		const [microfrontends] = await Microfrontend.query()
-			.filter("applicationId", "=", this.id)
-			.run();
-		return microfrontends;
-	}
+    const microfrontends = await application.getMicrofrontends();
+    return {
+      ...application?.toJSON(),
+      microfrontends: microfrontends.map((micro) => micro.toJSON()),
+    };
+  }
 
-	async update(payload: IApplication) {
-		this.name = payload.name;
-		await this.save();
-		return this;
-	}
+  static async createFromRepository(
+    repository: any,
+    payload: IApplication,
+    ownerId: string
+  ) {
+    const application = Application.create({
+      name: repository.name,
+      githubId: repository.full_name,
+      packageName: payload.packageName,
+      ownerId,
+      createdAt: dayJs().format(),
+      id: uuidv4(),
+    });
+    await application.save();
+    return application;
+  }
 
-	async getMeta() {
-		const [microfrontends] = await Microfrontend.query()
-			.filter("applicationId", "=", this.id)
-			.run();
+  async getMicrofrontends() {
+    const [microfrontends] = await Microfrontend.query()
+      .filter("applicationId", "=", this.id)
+      .run();
+    return microfrontends;
+  }
 
-		const meta = {};
+  async update(payload: IApplication) {
+    this.name = payload.name;
+    await this.save();
+    return this;
+  }
 
-		const microfrontendFiles = await Promise.all(microfrontends.map(async (microfrontend) => {
-			const version = await microfrontend.getCurrentVersion();
-			return {
-				name: microfrontend.name,
-				files: version?.files
-			}
-		}));
+  async getMeta() {
+    const [microfrontends] = await Microfrontend.query()
+      .filter("applicationId", "=", this.id)
+      .run();
 
-		
-		const asd =  microfrontendFiles
-			.filter(microFile => !!microFile.files)
-			.reduce((agg, microFile) => Object.assign(agg, {[microFile.name]: microFile.files}), {})
-		return asd
-	}
+    const meta = {};
 
+    const microfrontendFiles = await Promise.all(
+      microfrontends.map(async (microfrontend) => {
+        const version = await microfrontend.getCurrentVersion();
+        return {
+          name: microfrontend.name,
+          files: version?.files,
+        };
+      })
+    );
+
+    const asd = microfrontendFiles
+      .filter((microFile) => !!microFile.files)
+      .reduce(
+        (agg, microFile) =>
+          Object.assign(agg, { [microFile.name]: microFile.files }),
+        {}
+      );
+    return asd;
+  }
 }
 
 export default Application;

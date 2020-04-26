@@ -8,7 +8,6 @@
 
 [SYS] => System
 
-
 # Fluxogram
 
 ## Setup
