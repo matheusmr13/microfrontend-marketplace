@@ -1,16 +1,11 @@
 import axios from 'axios';
 import User from 'user/user';
-import Application from './model';
-import https from 'https';
-import fs from 'fs';
-
-// import './test';
+import Application from '../application/model';
 
 export const getGithubRepository = (repositoryName: string) => {
 	return axios(`https://api.github.com/repos/${repositoryName}`)
 		.then((response: any) => response.data);
 }
-
 
 export const writeFileToGithubRepository = (user: User, application: Application) => {
 	return axios({

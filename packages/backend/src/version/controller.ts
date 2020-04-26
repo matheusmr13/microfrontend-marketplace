@@ -14,7 +14,6 @@ VersionController.get('/:uuid', async(req, res) => {
 });
 
 VersionController.post('/', async(req, res) => {
-	console.info(req.body);
 	const micro = await Version.createVersion(req.body);
 	res.json(micro.toJSON());
 });

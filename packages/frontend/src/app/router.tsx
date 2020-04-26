@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import {
   Switch,
   Route,
-  useRouteMatch,
+  useHistory,
   Redirect
 } from "react-router-dom";
 
@@ -19,15 +19,19 @@ const LANDING_PAGE_URL = '/';
 const LOGGED_HOME_URL = '/home';
 
 function Router() {
- const match = useRouteMatch();
+ const history = useHistory();
  const [loggedUser] = useLoggedUser();
- if (loggedUser) configureLoggedUser(loggedUser)
 
- if (match.url.startsWith(LOGIN_URL) && !!loggedUser) {
+ if (loggedUser) {
+	 configureLoggedUser(loggedUser)
+ }
+
+
+ if (!history.location.pathname.startsWith(LOGGED_HOME_URL) && !!loggedUser) {
 	 return <Redirect to={LOGGED_HOME_URL} />
  }
 
- if (match.url.startsWith(LOGGED_HOME_URL) && !loggedUser) {
+ if (history.location.pathname.startsWith(LOGGED_HOME_URL) && !loggedUser) {
 	return <Redirect to={LANDING_PAGE_URL} />
 }
 

@@ -51,6 +51,7 @@ const NewApplication : React.FC<{
 			name="basic"
 			onFinish={onFinish}
 			onFinishFailed={onFinishFailed}
+			initialValues={application}
 			>
 			<Form.Item
 				label="Name"
@@ -92,9 +93,9 @@ const NewApplication : React.FC<{
 							<Title>Micros</Title>
 						</Typography>
 							<div className="Application__microfrontend-list">
-								<Card title="Create microfrontend" extra={<Link to={`/microfrontend/new?applicationId=${application.id}`}>New</Link>} style={{ width: 300, marginRight: '18px'  }}>
+								{/* <Card title="Create microfrontend" extra={<Link to={`/microfrontend/new?applicationId=${application.id}`}>New</Link>} style={{ width: 300, marginRight: '18px'  }}>
 									Create microfrontend
-								</Card>
+								</Card> */}
 								{application.microfrontends.map((microfrontend: any) => (
 									<Card title={microfrontend.name} extra={<Link to={`/microfrontend/${microfrontend.id}`} >Edit</Link>} style={{ width: 300, marginRight: '18px'  }}>
 										{microfrontend.name}

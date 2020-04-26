@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { List, Avatar, Typography } from 'antd';
-import { MessageOutlined, LikeOutlined, StarOutlined, GithubOutlined } from '@ant-design/icons';
+import { List, Avatar, Typography, Input } from 'antd';
+import { MessageOutlined, LikeOutlined, StarOutlined, GithubOutlined, SearchOutlined } from '@ant-design/icons';
 
 import useLoggedUser from 'base/hooks/user';
 import { useGithubApiRequest } from 'base/hooks/request';
@@ -22,17 +22,17 @@ const IconText : React.FC<{
 
   const Repos : React.FC<{
 }> = () => {
-	const [user] = useLoggedUser();
-	const match = useRouteMatch();
+	const [searchText, setSearchText] = useState('');
   const [{ data: repos, loading}, fetchRepos] = useGithubApiRequest('/user/repos?type=owner');
 
   return (
 	  <Page title="Github Repositories">
+		<Input size="large" placeholder="Search" prefix={<SearchOutlined />} value={searchText} onChange={(e) => setSearchText(e.target.value)} />
 		<List
 			itemLayout="vertical"
 			size="large"
 			loading={loading}
-			dataSource={repos}
+			dataSource={(repos || []).filter((repo : any) => repo.name.indexOf(searchText) > -1)}
 			renderItem={(repo:any) => ( 
 				<List.Item
 					key={repo.id}
@@ -40,7 +40,7 @@ const IconText : React.FC<{
 						<IconText icon={StarOutlined} text={repo.stargazers_count} key="list-vertical-star-o" />,
 						<IconText icon={MessageOutlined} text={repo.open_issues} key="list-vertical-message" />,
 					]}
-					extra={<Link to={`./application/import?repository=${repo.full_name}`}>Import</Link>}
+					extra={<Link to={`./github/import/${repo.full_name}`}>Import</Link>}
 				>
 					<List.Item.Meta
 					avatar={<Avatar icon={<GithubOutlined />} />}

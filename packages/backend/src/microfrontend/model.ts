@@ -10,7 +10,8 @@ enum APPROVAL_TYPE {
 
 interface IMicrofrontend {
 	name: string,
-	applicationId: string
+	applicationId: string,
+	packageName: string
 }
 
 @Entity({namespace: "testing", kind: "microfrontend"})
@@ -21,9 +22,18 @@ class Microfrontend extends BaseEntity {
     
     @Column()
 	public name: string = '';
+
+	@Column()
+	public packageName: string = '';
+
+	@Column()
+	public githubId: string = '';
 	
 	@Column({ index: true })
 	public applicationId: string = '';
+
+	@Column({ index: true })
+	public ownerId: string = '';
 
 	@Column()
 	public approvalType: APPROVAL_TYPE = APPROVAL_TYPE.NEEDS_REVISION;
@@ -34,11 +44,6 @@ class Microfrontend extends BaseEntity {
 	@Column()
 	public createdAt: string = '';
 	
-	// constructor(name: string, applicationId:number) {
-	// 	super();
-	// 	this.name = name;
-	// 	this.applicationId = applicationId;
-	// }
 
 	static async createMicrofrontend(payload: IMicrofrontend) {
 		const microfrontend = Microfrontend.create({
@@ -48,6 +53,19 @@ class Microfrontend extends BaseEntity {
 		});
 		await microfrontend.save();
 		return microfrontend;
+	}
+
+	static async createFromRepository(repository: any, payload: IMicrofrontend, ownerId: string) {
+		const application = Microfrontend.create({
+			name: repository.name,
+			githubId: repository.full_name,
+			packageName: payload.packageName,
+			ownerId,
+			createdAt: dayJs().format(),
+			id: uuidv4()
+		});
+		await application.save();
+		return application;
 	}
 
 	async update(payload: IMicrofrontend) {

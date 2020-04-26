@@ -3,38 +3,39 @@ import { useLoggedApiRequest } from 'base/hooks/request';
 
 import { Link } from "react-router-dom";
   
+import { Card, Button } from 'antd';
 import Page from 'base/components/page';
 import { List } from 'antd';
 
-function ApplicationList() {
-	const [{ data : applications, loading, error }, refetch] = useLoggedApiRequest('/applications', { manual: true });
+function MicrofrontendList() {
+	const [{ data : microfrontends, loading, error }, refetch] = useLoggedApiRequest('/microfrontends', { manual: true });
 
 	useEffect(() => {
 		refetch();
 	}, [])
 
-	if (!applications) return null;
+	if (!microfrontends) return null;
+
 	return (
 	  <Page
-			title="Applications"
+			title="Microfrontends"
 		>
 		  <List
 			itemLayout="vertical"
 			size="large"
-			dataSource={applications}
-			renderItem={(application:any) => ( 
+			dataSource={microfrontends}
+			renderItem={(microfrontend:any) => ( 
 				<List.Item
-					key={application.id}
+					key={microfrontend.id}
 					actions={[
 						// <IconText icon={StarOutlined} text={repo.stargazers_count} key="list-vertical-star-o" />,
 						// <IconText icon={MessageOutlined} text={repo.open_issues} key="list-vertical-message" />,
 					]}
-					extra={<Link to={`./application/${application.id}`}>Edit</Link>}
+					extra={<Link to={`./microfrontend/${microfrontend.id}`}>Edit</Link>}
 				>
 					<List.Item.Meta
-					// avatar={<Avatar icon={<GithubOutlined />} />}
-						title={application.name}
-						description={application.description}
+						title={microfrontend.name}
+						description={microfrontend.description}
 					/>
 					{'asd'}
 			</List.Item>
@@ -44,4 +45,4 @@ function ApplicationList() {
 	);
   }
 
-  export default ApplicationList
+  export default MicrofrontendList

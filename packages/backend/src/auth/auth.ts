@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
+import User from 'user/user';
 
 const SECRET = 'MY_COOL_SECRET'
-class Auth {
+class Account {
 
 	static validateToken(token:string) {
 		try {
@@ -13,20 +14,18 @@ class Auth {
 		}
 	}
 
-	// static createToken(user) {
-	// 	const token = jwt.sign({
-	// 		id: user.id
-	// 	}, SECRET, {
-	// 		expiresIn: 10000
-	// 	});
-	// }
+	static createToken(user: User) {
+		const token = jwt.sign({
+			id: user.id
+		}, SECRET, {
+			expiresIn: 1000000
+		});
 
-	// id: string;
-	// constructor(token) {
-
-	// }
-
-
+		return {
+			access_token: token,
+			token_type: 'bearer'
+		};
+	}
 }
 
-export default Auth;
+export default Account;

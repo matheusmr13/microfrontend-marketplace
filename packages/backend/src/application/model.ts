@@ -5,7 +5,8 @@ import dayJs from 'dayjs';
 import Microfrontend from 'microfrontend/model';
 
 interface IApplication {
-	name: string
+	name: string,
+	packageName: string
 }
 
 @Entity({namespace: "testing", kind: "application"})
@@ -18,6 +19,12 @@ class Application extends BaseEntity {
 
 	@Column()
 	public githubId : string = '';
+
+	@Column()
+	public packageName : string = '';
+
+	@Column({ index: true })
+	public ownerId : string = '';
 
 	@Column()
 	public createdAt: string = '';
@@ -33,20 +40,12 @@ class Application extends BaseEntity {
 		}
 	}
 	
-	static async createApplication(payload: IApplication) {
-		const application = Application.create({
-			...payload,
-			createdAt: dayJs().format(),
-			id: uuidv4()
-		});
-		await application.save();
-		return application;
-	}
-
-	static async createApplicationFromRepository(repository: any) {
+	static async createFromRepository(repository: any, payload: IApplication, ownerId: string) {
 		const application = Application.create({
 			name: repository.name,
 			githubId: repository.full_name,
+			packageName: payload.packageName,
+			ownerId,
 			createdAt: dayJs().format(),
 			id: uuidv4()
 		});
@@ -76,7 +75,6 @@ class Application extends BaseEntity {
 
 		const microfrontendFiles = await Promise.all(microfrontends.map(async (microfrontend) => {
 			const version = await microfrontend.getCurrentVersion();
-			console.info(version);
 			return {
 				name: microfrontend.name,
 				files: version?.files
@@ -87,7 +85,6 @@ class Application extends BaseEntity {
 		const asd =  microfrontendFiles
 			.filter(microFile => !!microFile.files)
 			.reduce((agg, microFile) => Object.assign(agg, {[microFile.name]: microFile.files}), {})
-			console.info(asd)
 		return asd
 	}
 

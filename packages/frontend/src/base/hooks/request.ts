@@ -13,14 +13,26 @@ export const useLoggedApiRequest = makeUseAxios({
 });
 
 const configureLoggedApiRequest = (token: any) => {
-  useLoggedApiRequest.configure({
-    axios: Axios.create({
-      baseURL: 'http://localhost:8080/',
-      headers: {
-        Authorization: `${token.token_type} ${token.access_token}`
-      }
-    })
-  })
+
+  const axios = Axios.create({
+    baseURL: 'http://localhost:8080/',
+    headers: {
+      Authorization: `${token.token_type} ${token.access_token}`
+    }
+  });
+  axios.interceptors.response.use((res) => {
+    return res;
+  }, (error) => {
+    const { response } = error;
+    if (response.status === 401) {
+      localStorage.removeItem('auth');
+      window.location.reload();
+      return;
+    }
+    return Promise.reject(error);
+  });
+  useLoggedApiRequest.configure({ axios });
+
 }
 
 

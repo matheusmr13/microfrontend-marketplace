@@ -3,7 +3,7 @@ import './App.css';
 import Application from 'modules/application';
 import Microfrontend from 'modules/microfrontend';
 import { Menu } from 'antd';
-import { GithubFilled, SolutionOutlined,UserOutlined, HomeOutlined } from '@ant-design/icons';
+import { GithubFilled, SolutionOutlined,UserOutlined, HomeOutlined, UnorderedListOutlined } from '@ant-design/icons';
 
 import {
   BrowserRouter as Router,
@@ -15,7 +15,7 @@ import {
 } from "react-router-dom";
 
 import Version from 'modules/version';
-import Repositories from 'modules/github/repositories';
+import Github from 'modules/github';
 import Profile from 'modules/account/profile';
 
 
@@ -25,8 +25,9 @@ function FullApp() {
 
   const items = [
     { label: 'Home', icon: HomeOutlined, url: '/' },
-    { label: 'Repositories', icon: GithubFilled, url: '/repositories' },
+    { label: 'Repositories', icon: GithubFilled, url: '/github' },
     { label: 'Applications', icon: SolutionOutlined, url: '/application' },
+    { label: 'Microfronotends', icon: UnorderedListOutlined, url: '/microfrontend' },
     { label: 'Profile', icon: UserOutlined, url: '/profile' },
   ];
   
@@ -57,7 +58,7 @@ function FullApp() {
           <Route path={`${match.path}/application`}><Application /></Route>
           <Route path={`${match.path}/microfrontend`}><Microfrontend /></Route>
           <Route path={`${match.path}/version`}><Version /></Route>
-          <Route path={`${match.path}/repositories`}><Repositories /></Route>
+          <Route path={`${match.path}/github`}><Github /></Route>
           <Route path={`${match.path}/profile`}><Profile /></Route>
         </Switch>
       </main>

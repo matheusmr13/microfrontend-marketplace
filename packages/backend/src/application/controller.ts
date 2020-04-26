@@ -1,6 +1,6 @@
 import express from 'express';
 import Application from './model';
-import { getGithubRepository, writeFileToGithubRepository } from './client';
+import { getGithubRepository, writeFileToGithubRepository } from '../github/client';
 import User from 'user/user';
 
 
@@ -32,8 +32,9 @@ ApplicationController.get('/:uuid/meta', async(req, res) => {
 
 ApplicationController.post('/import', async(req, res) => {
 	try {
+		const { id } = res.locals.tokenAuth;
 		const repository = await getGithubRepository(req.body.repositoryName);
-		const application = await Application.createApplicationFromRepository(repository);
+		const application = await Application.createFromRepository(repository, req.body, id);
 		res.json(application.toJSON());
 	} catch(e){
 		console.error(e);
@@ -64,10 +65,6 @@ ApplicationController.put('/:uuid/publish', async(req, res) => {
 	}
 });
 
-
-
-writeFileToGithubRepository
-
 ApplicationController.put('/:uuid', async(req, res) => {
 	let [application] = await Application.find(req.params.uuid);
 	if (!application) {
@@ -78,12 +75,5 @@ ApplicationController.put('/:uuid', async(req, res) => {
 	application = await application.update(req.body);
 	res.json(application.toJSON());
 });
-
-ApplicationController.post('/', async(req, res) => {
-	const application = await Application.createApplication(req.body);
-	res.json(application.toJSON());
-});
-
-
 
 export default ApplicationController;

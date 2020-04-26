@@ -23,8 +23,6 @@ const NewMicrofrontend : React.FC<{
 	}, { manual: true});
 
 	const applicationId = useQuery().get('applicationId');
-  
-	console.info({ applicationId })
 	const onFinish = async (values :any) => {
 		await createmicrofrontend({
 			data: {

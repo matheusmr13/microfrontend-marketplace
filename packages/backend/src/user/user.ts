@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity } from "ts-datastore-orm";
 import { v4 as uuidv4 } from 'uuid';
 import dayJs from 'dayjs';
 import jwt from 'jsonwebtoken';
+import Auth from '../auth/auth';
 
 interface IUser {
 	name: string,
@@ -41,16 +42,7 @@ class User extends BaseEntity {
 	}
 
 	getJWT() {
-		const token = jwt.sign({
-			id: this.id
-		}, 'MY_COOL_SECRET', {
-			expiresIn: 10000
-		});
-
-		return {
-			access_token: token,
-			token_type: 'bearer'
-		};
+		return Auth.createToken(this);
 	}
 
 	async update(payload: IUser) {

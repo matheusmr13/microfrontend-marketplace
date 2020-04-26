@@ -19,7 +19,7 @@ function ApplicationDetails () {
 
 	return (
 		<div>
-			<a target="_blank" href={`http://localhost:8080/applications/${applicationId}/meta`}> Meta.json</a>
+			{/* <a target="_blank" href={`http://localhost:8080/applications/${applicationId}/meta`}> Meta.json</a> */}
 			<ApplicationForm application={application} />  
 		</div>
 	);
