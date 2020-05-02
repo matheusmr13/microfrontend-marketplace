@@ -27,6 +27,7 @@
   "dependencies": {
     "@google-cloud/datastore": "^5.1.0",
     "@google-cloud/tasks": "^1.9.0",
+    "@octokit/rest": "^17.6.0",
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.4",
     "@types/jsonwebtoken": "^8.3.9",
@@ -37,6 +38,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "npm-api": "^1.0.0",
+    "octokat": "^0.10.0",
     "ts-datastore-orm": "^0.1.21",
     "typescript": "^3.8.3",
     "uuid": "^7.0.3"

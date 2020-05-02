@@ -1,11 +1,13 @@
-import { BaseEntity, Column, Entity } from "ts-datastore-orm";
-import Version from "version/model";
-import { v4 as uuidv4 } from "uuid";
-import dayJs from "dayjs";
+import { BaseEntity, Column, Entity } from 'ts-datastore-orm';
+import { v4 as uuidv4 } from 'uuid';
+import dayJs from 'dayjs';
+import User from 'user/user';
+import { getFoldersFromGithub } from 'github/client';
+import Version from 'version/model';
 
 enum APPROVAL_TYPE {
-  NEEDS_REVISION = "NEEDS_APROVAL",
-  AUTO_APPROVE = "AUTO_APPROVE",
+  NEEDS_REVISION = 'NEEDS_APROVAL',
+  AUTO_APPROVE = 'AUTO_APPROVE',
 }
 
 interface IMicrofrontend {
@@ -14,25 +16,25 @@ interface IMicrofrontend {
   packageName: string;
 }
 
-@Entity({ namespace: "testing", kind: "microfrontend" })
+@Entity({ namespace: 'testing', kind: 'microfrontend' })
 class Microfrontend extends BaseEntity {
   @Column({ index: true })
-  public id: string = "";
+  public id: string = '';
 
   @Column()
-  public name: string = "";
+  public name: string = '';
 
   @Column()
-  public packageName: string = "";
+  public packageName: string = '';
 
   @Column()
-  public githubId: string = "";
+  public githubId: string = '';
 
   @Column({ index: true })
-  public applicationId: string = "";
+  public applicationId: string = '';
 
   @Column({ index: true })
-  public ownerId: string = "";
+  public ownerId: string = '';
 
   @Column()
   public approvalType: APPROVAL_TYPE = APPROVAL_TYPE.NEEDS_REVISION;
@@ -41,7 +43,7 @@ class Microfrontend extends BaseEntity {
   public deployedVersionsIds: number[] = [];
 
   @Column()
-  public createdAt: string = "";
+  public createdAt: string = '';
 
   static async createMicrofrontend(payload: IMicrofrontend) {
     const microfrontend = Microfrontend.create({
@@ -53,15 +55,11 @@ class Microfrontend extends BaseEntity {
     return microfrontend;
   }
 
-  static async createFromRepository(
-    repository: any,
-    payload: IMicrofrontend,
-    ownerId: string
-  ) {
+  static async createFromRepository(repository: any, payload: IMicrofrontend, ownerId: string) {
     const application = Microfrontend.create({
       name: repository.name,
+      ...payload,
       githubId: repository.full_name,
-      packageName: payload.packageName,
       ownerId,
       createdAt: dayJs().format(),
       id: uuidv4(),
@@ -72,6 +70,7 @@ class Microfrontend extends BaseEntity {
 
   async update(payload: IMicrofrontend) {
     this.name = payload.name;
+    this.packageName = payload.packageName;
     await this.save();
     return this;
   }
@@ -88,60 +87,41 @@ class Microfrontend extends BaseEntity {
   }
 
   async getVersions() {
-    const [versions] = await Version.query()
-      .filter("microfrontendId", "=", this.id)
-      .run();
+    const [versions] = await Version.query().filter('microfrontendId', '=', this.id).run();
     return versions;
   }
 
   async getCurrentVersion() {
     const [version] = await Version.query()
-      .filter("microfrontendId", "=", this.id)
+      .filter('microfrontendId', '=', this.id)
       // .filter("status", "=", Version.STATUS.APPROVED)
       .run();
 
     return version.filter((v) => v.status === Version.STATUS.APPROVED)[0];
   }
 
-  // async getMetadata() {
-  // 	const [deployedVersions] = await Version.findMany(this.deployedVersionsIds);
+  async syncVersions(user: User) {
+    const githubUrl = `/repos/${this.githubId}/contents/versions/${this.packageName}`;
+    const versions = await getFoldersFromGithub(githubUrl, user);
 
-  // 	return deployedVersions.reduce((agg: any, version :Version) => Object.assign(agg, {
-  // 		[version.microfrontendName]: version.files
-  // 	}), {});
+    const [microfrontendVersions] = await Version.query().filter('microfrontendId', '=', this.id).run();
 
-  // {
-  // 	"calculator": {
-  // 	  "js": [
-  // 		"./microfrontends/calculator/static/js/runtime-main.77471cde.js",
-  // 		"./microfrontends/calculator/static/js/2.38ed667d.chunk.js",
-  // 		"./microfrontends/calculator/static/js/main.05aca4df.chunk.js"
-  // 	  ],
-  // 	  "css": [
-  // 		"./microfrontends/calculator/static/css/main.5db564a1.chunk.css"
-  // 	  ]
-  // 	},
-  // 	"clock": {
-  // 	  "js": [
-  // 		"./microfrontends/clock/static/js/2.aa876795.chunk.js",
-  // 		"./microfrontends/clock/static/js/main.200bda5e.chunk.js",
-  // 		"./microfrontends/clock/static/js/runtime-main.bba46b12.js",
-  // 		"./microfrontends/clock/precache-manifest.eef57980d56dde585cc47719c11db0cb.js"
-  // 	  ],
-  // 	  "css": []
-  // 	},
-  // 	"result-view": {
-  // 	  "js": [
-  // 		"./microfrontends/result-view/static/js/2.302b8874.chunk.js",
-  // 		"./microfrontends/result-view/static/js/runtime-main.b6c8b1e5.js",
-  // 		"./microfrontends/result-view/static/js/main.1f55f859.chunk.js"
-  // 	  ],
-  // 	  "css": [
-  // 		"./microfrontends/result-view/static/css/main.696f78a6.chunk.css"
-  // 	  ]
-  // 	}
-  //   }
-  // }
+    await Promise.all(
+      versions
+        .filter(
+          (version: any) =>
+            !microfrontendVersions.find((applicationVersion) => applicationVersion.name === version.name)
+        )
+        .map(async (version: any) => {
+          const newVersion = Version.build({
+            microfrontendId: this.id,
+            name: version.name,
+            sha: version.sha,
+          });
+          await newVersion.save();
+        })
+    );
+  }
 }
 
 export default Microfrontend;

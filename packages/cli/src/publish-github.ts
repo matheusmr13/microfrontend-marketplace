@@ -8,11 +8,15 @@ const publish = async (options: any) => {
   log(chalk.blue("Publishing on github!"));
   const appPackageJson = require(appPackageJsonPath);
 
+  const escapePackageName = (packageName: string) => packageName.replace(/@/g, "").replace(/\//g, "_");
+
+  const dest = `versions/${escapePackageName(appPackageJson.name)}/${appPackageJson.version}`;
+  console.info({ dest });
   await new Promise((resolve, reject) => {
     ghPages.publish(
       "build",
       {
-        dest: `versions/${appPackageJson.name}/${appPackageJson.version}`,
+        dest,
         branch: "versions",
       },
       (error) => {

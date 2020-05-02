@@ -1,9 +1,9 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 
-import Details from "./details";
+import { Details, New } from "./form";
 import List from "./list";
-import New from "./new";
+import Deploy from "./deploy";
 
 function ApplicationHome() {
   let match = useRouteMatch();
@@ -12,6 +12,9 @@ function ApplicationHome() {
     <Switch>
       <Route exact path={`${match.path}/new`}>
         <New />
+      </Route>
+      <Route path={`${match.path}/:applicationId/deploy`}>
+        <Deploy />
       </Route>
       <Route path={`${match.path}/:applicationId`}>
         <Details />

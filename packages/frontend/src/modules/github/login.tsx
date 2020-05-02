@@ -27,6 +27,11 @@ function Login() {
     return <Redirect to="/home" />;
   }
 
+  // if (error) {
+  //   console.info(error);
+  //   window.location.href = '/';
+  // }
+
   return <div>hue</div>;
 }
 

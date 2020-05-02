@@ -13,6 +13,8 @@ import {
   Space,
 } from "antd";
 
+import { default as DetailsComponent } from './details';
+
 const { Title, Paragraph, Text } = Typography;
 const { Option } = Select;
 
@@ -30,19 +32,6 @@ const NewApplication: React.FC<{
     },
     { manual: true }
   );
-
-  const [_, publishApplication] = useLoggedApiRequest(
-    {
-      url: `/applications/${application.id}/publish`,
-      method: isNew ? "POST" : "PUT",
-    },
-    { manual: true }
-  );
-
-  useLoggedApiRequest({
-    url: `/users`,
-  });
-
   const onFinish = async (values: any) => {
     await createApplication({
       data: values,
@@ -51,10 +40,6 @@ const NewApplication: React.FC<{
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
-  };
-
-  const handlePublishClick = async () => {
-    await publishApplication();
   };
 
   if (!loading && result) return <Redirect to="../application" />;
@@ -79,26 +64,16 @@ const NewApplication: React.FC<{
           <Input />
         </Form.Item>
 
-        {/* <Form.Item name="type" label="type" rules={[{ required: true }]}>
-				<Select
-					placeholder="Select a option and change input text above"
-					allowClear
-				>
-					<Option value="menu">male</Option>
-					<Option value="order_type">female</Option>
-					<Option value="order_type">female</Option>
-					<Option value="other">other</Option>
-				</Select>
-				</Form.Item> */}
-
         <Form.Item>
           <Space>
             <Button type="primary" htmlType="submit">
               Save
             </Button>
-            <Button type="ghost" onClick={handlePublishClick}>
-              WriteFile
-            </Button>
+            <Link to={`./${application.id}/deploy`}>
+              <Button type="ghost" >
+                New Deploy
+              </Button>
+            </Link>
           </Space>
         </Form.Item>
       </Form>
@@ -109,14 +84,12 @@ const NewApplication: React.FC<{
             <Title>Micros</Title>
           </Typography>
           <div className="Application__microfrontend-list">
-            {/* <Card title="Create microfrontend" extra={<Link to={`/microfrontend/new?applicationId=${application.id}`}>New</Link>} style={{ width: 300, marginRight: '18px'  }}>
-									Create microfrontend
-								</Card> */}
             {application.microfrontends.map((microfrontend: any) => (
               <Card
+                key={microfrontend.id}
                 title={microfrontend.name}
                 extra={
-                  <Link to={`/microfrontend/${microfrontend.id}`}>Edit</Link>
+                  <Link to={`../microfrontend/${microfrontend.id}`}>Edit</Link>
                 }
                 style={{ width: 300, marginRight: "18px" }}
               >
@@ -130,4 +103,5 @@ const NewApplication: React.FC<{
   );
 };
 
-export default NewApplication;
+export const Details = () => <DetailsComponent Component={NewApplication} />;
+export const New = () => <NewApplication application={{}} />;

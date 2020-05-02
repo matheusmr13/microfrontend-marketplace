@@ -5,5 +5,9 @@
   },
   "folders": [],
   "settings": {},
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "editor.useTabStops": false,
+  "editor.tabSize": 2,
+  "prettier.printWidth": 120,
+  "prettier.singleQuote": true
 }

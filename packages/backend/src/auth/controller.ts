@@ -9,9 +9,8 @@ AuthController.post("/github", async (req, res) => {
     const { code } = req.query;
     const githubAuth = await getGithubAccessToken(code.toString());
     const userInfos = await getGithubUserInfo(githubAuth);
-    let [user] = await User.query()
-      .filter("login", "=", userInfos.login)
-      .runOnce();
+
+    let [user] = await User.query().filter("login", "=", userInfos.login).runOnce();
 
     if (!user) {
       user = await User.createUser({

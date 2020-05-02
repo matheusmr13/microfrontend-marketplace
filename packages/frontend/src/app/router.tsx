@@ -21,6 +21,10 @@ function Router() {
     configureLoggedUser(loggedUser);
   }
 
+  if (history.location.pathname.startsWith('/logout')) {
+    return <Logout />;
+  }
+
   if (!history.location.pathname.startsWith(LOGGED_HOME_URL) && !!loggedUser) {
     return <Redirect to={LOGGED_HOME_URL} />;
   }
@@ -33,9 +37,6 @@ function Router() {
     <Switch>
       <Route exact path="/">
         <LandingPage />
-      </Route>
-      <Route path="/logout">
-        <Logout />
       </Route>
       <Route path="/login">
         <Login />

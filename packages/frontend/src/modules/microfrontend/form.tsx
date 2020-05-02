@@ -22,6 +22,14 @@ const NewMicrofrontend: React.FC<{
   const isNew = !microfrontend.id;
   const history = useHistory();
 
+  const [a, syncMicrofrontend] = useLoggedApiRequest(
+    {
+      url: `/microfrontends/${microfrontend.id}/sync`,
+      method: 'POST',
+    },
+    { manual: true }
+  );
+
   const [
     { data: result, loading, error },
     createmicrofrontend,
@@ -82,6 +90,11 @@ const NewMicrofrontend: React.FC<{
     },
   ];
 
+  const handleSyncClick = async () => {
+    await syncMicrofrontend();
+    window.location.reload();
+  }
+
   if (result) return null;
 
   return (
@@ -92,33 +105,31 @@ const NewMicrofrontend: React.FC<{
       <Form
         labelCol={{ span: 2 }}
         name="basic"
+        initialValues={microfrontend}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
         <Form.Item
           label="Name"
           name="name"
-          rules={[{ required: true, message: "Your microfrontend name." }]}
         >
           <Input />
         </Form.Item>
 
-        {/* <Form.Item name="type" label="type" rules={[{ required: true }]}>
-				<Select
-					placeholder="Select a option and change input text above"
-					allowClear
-				>
-					<Option value="menu">male</Option>
-					<Option value="order_type">female</Option>
-					<Option value="order_type">female</Option>
-					<Option value="other">other</Option>
-				</Select>
-				</Form.Item> */}
+        <Form.Item
+          label="Package name"
+          name="packageName"
+        >
+          <Input />
+        </Form.Item>
 
         <Form.Item>
           <Button type="primary" htmlType="submit">
             Save
           </Button>
+          <Button type="ghost" onClick={handleSyncClick}>
+            Sync Versions
+            </Button>
         </Form.Item>
       </Form>
 
