@@ -1,16 +1,14 @@
-import express from "express";
-import { getGithubAccessToken, getGithubUserInfo } from "./client";
-import User from "../user/user";
+import { Request, Response } from 'express';
+import User from 'user/user';
+import { getGithubAccessToken, getGithubUserInfo } from './client';
 
-const AuthController = express.Router();
-
-AuthController.post("/github", async (req, res) => {
-  try {
+class AuthController {
+  public auth = async (req: Request, res: Response) => {
     const { code } = req.query;
     const githubAuth = await getGithubAccessToken(code.toString());
     const userInfos = await getGithubUserInfo(githubAuth);
 
-    let [user] = await User.query().filter("login", "=", userInfos.login).runOnce();
+    let [user] = await User.query().filter('login', '=', userInfos.login).runOnce();
 
     if (!user) {
       user = await User.createUser({
@@ -25,10 +23,7 @@ AuthController.post("/github", async (req, res) => {
       github: githubAuth,
       api: user.getJWT(),
     });
-  } catch (e) {
-    console.error(e);
-    res.status(500).send();
-  }
-});
+  };
+}
 
-export default AuthController;
+export default new AuthController();

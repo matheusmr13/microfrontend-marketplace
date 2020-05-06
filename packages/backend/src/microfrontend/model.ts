@@ -4,6 +4,7 @@ import dayJs from 'dayjs';
 import User from 'user/user';
 import { getFoldersFromGithub } from 'github/client';
 import Version from 'version/model';
+import BasicEntity from '../base/basic-entity';
 
 enum APPROVAL_TYPE {
   NEEDS_REVISION = 'NEEDS_APROVAL',
@@ -17,13 +18,7 @@ interface IMicrofrontend {
 }
 
 @Entity({ namespace: 'testing', kind: 'microfrontend' })
-class Microfrontend extends BaseEntity {
-  @Column({ index: true })
-  public id: string = '';
-
-  @Column()
-  public name: string = '';
-
+class Microfrontend extends BasicEntity {
   @Column()
   public packageName: string = '';
 
@@ -33,27 +28,8 @@ class Microfrontend extends BaseEntity {
   @Column({ index: true })
   public applicationId: string = '';
 
-  @Column({ index: true })
-  public ownerId: string = '';
-
   @Column()
   public approvalType: APPROVAL_TYPE = APPROVAL_TYPE.NEEDS_REVISION;
-
-  @Column()
-  public deployedVersionsIds: number[] = [];
-
-  @Column()
-  public createdAt: string = '';
-
-  static async createMicrofrontend(payload: IMicrofrontend) {
-    const microfrontend = Microfrontend.create({
-      ...payload,
-      createdAt: dayJs().format(),
-      id: uuidv4(),
-    });
-    await microfrontend.save();
-    return microfrontend;
-  }
 
   static async createFromRepository(repository: any, payload: IMicrofrontend, ownerId: string) {
     const application = Microfrontend.create({
@@ -66,38 +42,6 @@ class Microfrontend extends BaseEntity {
     });
     await application.save();
     return application;
-  }
-
-  async update(payload: IMicrofrontend) {
-    this.name = payload.name;
-    this.packageName = payload.packageName;
-    await this.save();
-    return this;
-  }
-
-  static async findJsonWithVersions(uuid: string) {
-    const [microfrontend] = await Microfrontend.find(uuid);
-    if (!microfrontend) return null;
-
-    const versions = await microfrontend.getVersions();
-    return {
-      ...microfrontend.toJSON(),
-      versions: versions.map((version) => version.toJSON()),
-    };
-  }
-
-  async getVersions() {
-    const [versions] = await Version.query().filter('microfrontendId', '=', this.id).run();
-    return versions;
-  }
-
-  async getCurrentVersion() {
-    const [version] = await Version.query()
-      .filter('microfrontendId', '=', this.id)
-      // .filter("status", "=", Version.STATUS.APPROVED)
-      .run();
-
-    return version.filter((v) => v.status === Version.STATUS.APPROVED)[0];
   }
 
   async syncVersions(user: User) {

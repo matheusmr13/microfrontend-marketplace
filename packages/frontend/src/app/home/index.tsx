@@ -32,11 +32,7 @@ function FullApp() {
     { label: "Home", icon: HomeOutlined, url: "/" },
     { label: "Repositories", icon: GithubFilled, url: "/github" },
     { label: "Applications", icon: SolutionOutlined, url: "/application" },
-    {
-      label: "Microfronotends",
-      icon: UnorderedListOutlined,
-      url: "/microfrontend",
-    },
+    { label: "Microfrontends", icon: UnorderedListOutlined, url: "/microfrontend" },
     { label: "Profile", icon: UserOutlined, url: "/profile" },
   ];
 

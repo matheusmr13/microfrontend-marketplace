@@ -30,6 +30,8 @@ const NewMicrofrontend: React.FC<{
     { manual: true }
   );
 
+  const [{ data: versions = [] }] = useLoggedApiRequest(`/versions?microfrontendId=${microfrontend.id}`);
+
   const [
     { data: result, loading, error },
     createmicrofrontend,
@@ -138,7 +140,7 @@ const NewMicrofrontend: React.FC<{
           <Title>Versions</Title>
           <Table
             columns={columns}
-            dataSource={microfrontend.versions.map((v: any) => ({
+            dataSource={versions.map((v: any) => ({
               ...v,
               key: v.id,
             }))}
@@ -146,7 +148,7 @@ const NewMicrofrontend: React.FC<{
 
           <Title>History</Title>
           <Timeline>
-            {microfrontend.versions.map((version: any) => (
+            {versions.map((version: any) => (
               <Timeline.Item key={version.id} color="green">
                 Version {version.name} created at {version.createdAt}
               </Timeline.Item>

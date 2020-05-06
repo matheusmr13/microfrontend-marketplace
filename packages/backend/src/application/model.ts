@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity } from 'ts-datastore-orm';
+import { Column, Entity } from 'ts-datastore-orm';
 import { v4 as uuidv4 } from 'uuid';
 import dayJs from 'dayjs';
+import BasicEntity from 'base/basic-entity';
 
 import Microfrontend from 'microfrontend/model';
 
@@ -10,32 +11,12 @@ interface IApplication {
 }
 
 @Entity({ namespace: 'testing', kind: 'application' })
-class Application extends BaseEntity {
+class Application extends BasicEntity {
   @Column({ index: true })
   public id: string = '';
 
   @Column()
-  public name: string = '';
-
-  @Column()
   public githubId: string = '';
-
-  @Column({ index: true })
-  public ownerId: string = '';
-
-  @Column()
-  public createdAt: string = '';
-
-  static async findJsonWithMicrofrontends(uuid: string) {
-    const [application] = await Application.find(uuid);
-    if (!application) return null;
-
-    const microfrontends = await application.getMicrofrontends();
-    return {
-      ...application?.toJSON(),
-      microfrontends: microfrontends.map((micro) => micro.toJSON()),
-    };
-  }
 
   static async createFromRepository(repository: any, payload: IApplication, ownerId: string) {
     const applicationName = repository.name;
@@ -62,17 +43,6 @@ class Application extends BaseEntity {
     await containerMicrofrontend.save();
 
     return application;
-  }
-
-  async getMicrofrontends() {
-    const [microfrontends] = await Microfrontend.query().filter('applicationId', '=', this.id).run();
-    return microfrontends;
-  }
-
-  async update(payload: IApplication) {
-    this.name = payload.name;
-    await this.save();
-    return this;
   }
 }
 

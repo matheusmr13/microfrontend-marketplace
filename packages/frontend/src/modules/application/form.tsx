@@ -32,6 +32,9 @@ const NewApplication: React.FC<{
     },
     { manual: true }
   );
+
+  const [{ data: microfrontends }] = useLoggedApiRequest(`/microfrontends?applicationId=${application.id}`);
+
   const onFinish = async (values: any) => {
     await createApplication({
       data: values,
@@ -84,7 +87,7 @@ const NewApplication: React.FC<{
             <Title>Micros</Title>
           </Typography>
           <div className="Application__microfrontend-list">
-            {application.microfrontends.map((microfrontend: any) => (
+            {microfrontends && microfrontends.map((microfrontend: any) => (
               <Card
                 key={microfrontend.id}
                 title={microfrontend.name}
