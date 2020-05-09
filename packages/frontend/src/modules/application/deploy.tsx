@@ -40,6 +40,8 @@ function DeployApplication(props: { application: any }) {
     { manual: true }
   );
 
+  const [{ data: microfrontends }] = useLoggedApiRequest(`/microfrontends?applicationId=${application.id}`);
+
   const onFinish = async (values: any) => {
     console.info(values);
     await deployApplication({
@@ -58,7 +60,7 @@ function DeployApplication(props: { application: any }) {
     >
 
       {
-        application.microfrontends.map((micro: any) => (
+        microfrontends && microfrontends.map((micro: any) => (
           <MicrofrontendVersion
             key={micro.id}
             microfrontend={micro}
