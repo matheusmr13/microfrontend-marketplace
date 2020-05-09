@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useLoggedApiRequest } from "base/hooks/request";
 
-import { Redirect, Link, useLocation, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   Form,
   Input,
@@ -13,8 +13,7 @@ import {
   Table,
 } from "antd";
 import useQuery from "base/hooks/query-param";
-const { Title, Paragraph, Text } = Typography;
-const { Option } = Select;
+const { Title } = Typography;
 
 const NewMicrofrontend: React.FC<{
   microfrontend: any;

@@ -13,6 +13,7 @@ import useLoggedUser from "base/hooks/user";
 import { useGithubApiRequest } from "base/hooks/request";
 import { Link, useRouteMatch } from "react-router-dom";
 import Page from "base/components/page";
+import useQuery from "base/hooks/query-param";
 
 const IconText: React.FC<{
   icon: any;
@@ -29,6 +30,14 @@ const Repos: React.FC<{}> = () => {
   const [{ data: repos, loading }, fetchRepos] = useGithubApiRequest(
     "/user/repos?type=owner"
   );
+
+  const queryParam = useQuery();
+
+  const getUrlToImport = (repo: any) => {
+    let url = `./github/import/${repo.full_name}`;
+    if (queryParam.get("applicationId")) url += `?applicationId=${queryParam.get("applicationId")}`;
+    return url;
+  }
 
   return (
     <Page title="Github Repositories">
@@ -61,7 +70,7 @@ const Repos: React.FC<{}> = () => {
                 key="list-vertical-message"
               />,
             ]}
-            extra={<Link to={`./github/import/${repo.full_name}`}>Import</Link>}
+            extra={<Link to={getUrlToImport(repo)}>Import</Link>}
           >
             <List.Item.Meta
               avatar={<Avatar icon={<GithubOutlined />} />}

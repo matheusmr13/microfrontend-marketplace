@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import Page from "base/components/page";
 import Details from './details';
 import { Form, Select, Space, Button } from "antd";
+import FetchApplication from "./fetch";
 
 
 function MicrofrontendVersion(props: { microfrontend: any }) {
@@ -29,7 +30,7 @@ function MicrofrontendVersion(props: { microfrontend: any }) {
   )
 }
 
-function DeployApplication(props: { application: any }) {
+function ApplicationDeploy(props: { application: any }) {
   const { application } = props;
 
   const [_, deployApplication] = useLoggedApiRequest(
@@ -78,4 +79,8 @@ function DeployApplication(props: { application: any }) {
   </Page>
 }
 
-export default () => <Details Component={DeployApplication} />;
+export default () => (
+  <FetchApplication title="Application details">
+    {(application: any) => <ApplicationDeploy application={application} />}
+  </FetchApplication>
+);

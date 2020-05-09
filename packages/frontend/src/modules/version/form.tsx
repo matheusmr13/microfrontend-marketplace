@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useLoggedApiRequest } from "base/hooks/request";
 
-import { Redirect, useLocation, useHistory } from "react-router-dom";
-import { Form, Input, Button, Select, Card, Typography, Divider } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { useLocation, useHistory } from "react-router-dom";
+import { Form, Input, Button, Card } from "antd";
 
-const { Title, Paragraph, Text } = Typography;
-const { Option } = Select;
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);

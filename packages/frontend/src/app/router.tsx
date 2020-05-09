@@ -15,7 +15,7 @@ const LOGGED_HOME_URL = "/home";
 
 function Router() {
   const history = useHistory();
-  const [loggedUser] = useLoggedUser();
+  const [loggedUser, setLoggedUser] = useLoggedUser();
 
   if (loggedUser) {
     configureLoggedUser(loggedUser);
@@ -39,7 +39,7 @@ function Router() {
         <LandingPage />
       </Route>
       <Route path="/login">
-        <Login />
+        <Login handleLogin={setLoggedUser} />
       </Route>
       <Route path="/home">
         <Home />

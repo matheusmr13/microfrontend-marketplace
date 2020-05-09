@@ -6,8 +6,9 @@
   "folders": [],
   "settings": {},
   "editor.formatOnSave": true,
-  "editor.useTabStops": false,
-  "editor.tabSize": 2,
+	"editor.useTabStops": false,
   "prettier.printWidth": 120,
-  "prettier.singleQuote": true
+  "prettier.singleQuote": true,
+"editor.detectIndentation": false,
+"editor.tabSize": 2
 }

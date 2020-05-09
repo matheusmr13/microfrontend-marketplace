@@ -16,6 +16,7 @@ class Controller<T extends typeof Model> {
 
   public createFilteredByList<K extends Exclude<keyof InstanceType<T>, keyof BaseEntity>>(fields: Array<K>) {
     return async (req: Request, res: Response) => {
+      // await new Promise((resolve) => setTimeout(resolve, 40000));
       const query = this.classRef.query();
       fields.forEach((field) => {
         const fieldString = field.toString();

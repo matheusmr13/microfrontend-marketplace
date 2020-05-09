@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import useLoggedUser from "base/hooks/user";
 
@@ -9,8 +9,8 @@ import { useApiRequest } from "base/hooks/request";
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
-function Login() {
-  const [auth, setAuth] = useLoggedUser();
+function Login(props: { handleLogin: Function }) {
+  const { handleLogin } = props;
   const query = useQuery();
   const code = query.get("code");
   const [{ data, loading, error }, refetch] = useApiRequest({
@@ -18,21 +18,13 @@ function Login() {
     method: "POST",
   });
 
-  if (auth) {
-    return <Redirect to="/home" />;
-  }
+  useEffect(() => {
+    if (data) {
+      handleLogin(data);
+    }
+  })
 
-  if (data) {
-    setAuth(data);
-    return <Redirect to="/home" />;
-  }
-
-  // if (error) {
-  //   console.info(error);
-  //   window.location.href = '/';
-  // }
-
-  return <div>hue</div>;
+  return <div>Loading</div>;
 }
 
 export default Login;
