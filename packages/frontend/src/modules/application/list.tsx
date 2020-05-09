@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useLoggedApiRequest } from "base/hooks/request";
+import React, { useEffect, useState } from 'react';
+import { useLoggedApiRequest } from 'base/hooks/request';
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import Page from "base/components/page";
-import { List } from "antd";
+import Page from 'base/components/page';
+import { List } from 'antd';
 
 function ApplicationList() {
-  const [
-    { data: applications, loading, error },
-    refetch,
-  ] = useLoggedApiRequest("/applications", { manual: true });
+  const [{ data: applications, loading, error }, refetch] = useLoggedApiRequest('/applications', { manual: true });
 
   useEffect(() => {
     refetch();
@@ -39,7 +36,7 @@ function ApplicationList() {
               title={application.name}
               description={application.description}
             />
-            {"asd"}
+            {'asd'}
           </List.Item>
         )}
       />

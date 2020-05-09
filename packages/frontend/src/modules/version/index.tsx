@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
-import Details from "./details";
-import New from "./new";
+import Details from './details';
+import New from './new';
 
 function VersionsHome() {
   let match = useRouteMatch();

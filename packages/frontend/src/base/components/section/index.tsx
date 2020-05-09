@@ -1,12 +1,12 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Typography, Row, Spin } from "antd";
+import { Typography, Row, Spin } from 'antd';
 const { Title } = Typography;
 
 export interface ISectionProps {
   title: string;
   children: React.ReactNode;
-  loading: Boolean
+  loading: Boolean;
 }
 
 export default class Section extends React.Component<ISectionProps> {
@@ -19,7 +19,9 @@ export default class Section extends React.Component<ISectionProps> {
           <Row justify="center">
             <Spin size="large" />
           </Row>
-        ) : children}
+        ) : (
+          children
+        )}
       </section>
     );
   }

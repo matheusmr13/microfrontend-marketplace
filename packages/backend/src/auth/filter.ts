@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import Auth from "./auth";
+import { Request, Response, NextFunction } from 'express';
+import Auth from './auth';
 
 const AuthFilter = (req: Request, res: Response, next: NextFunction) => {
   console.log(req.url);

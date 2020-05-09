@@ -1,5 +1,5 @@
-import { promises as fs, existsSync, rmdirSync } from "fs";
-import path from "path";
+import { promises as fs, existsSync, rmdirSync } from 'fs';
+import path from 'path';
 
 export const mkdir = (dir: string) => fs.mkdir(dir, { recursive: true });
 export const isDirectory = async (source: string) => {
@@ -46,8 +46,7 @@ export const writeFile = async (pathToFile: string, content: string) => {
   await fs.writeFile(pathToFile, content);
 };
 
-export const writeJson = async (pathToFile: string, json: any) =>
-  writeFile(pathToFile, JSON.stringify(json, null, 2));
+export const writeJson = async (pathToFile: string, json: any) => writeFile(pathToFile, JSON.stringify(json, null, 2));
 
 export const getDirsFrom = async (source: string) => {
   const paths = await fs.readdir(source);
@@ -73,13 +72,10 @@ export const getDirectories = async (source: string) => {
     }))
   );
 
-  return mappedFolders
-    .filter(({ isDirectory: isDir }) => isDir)
-    .map(({ fileOrFolder: folder }) => folder);
+  return mappedFolders.filter(({ isDirectory: isDir }) => isDir).map(({ fileOrFolder: folder }) => folder);
 };
 
-export const mv = async (origin: string, dest: string) =>
-  fs.rename(origin, dest);
+export const mv = async (origin: string, dest: string) => fs.rename(origin, dest);
 export const getAllFilesFromDir = async (dir: string, allFiles: any = []) => {
   const all = await fs.readdir(dir);
 

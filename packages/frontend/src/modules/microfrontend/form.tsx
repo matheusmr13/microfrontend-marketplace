@@ -1,18 +1,9 @@
-import React from "react";
-import { useLoggedApiRequest } from "base/hooks/request";
+import React from 'react';
+import { useLoggedApiRequest } from 'base/hooks/request';
 
-import { useHistory } from "react-router-dom";
-import {
-  Form,
-  Input,
-  Button,
-  Select,
-  Card,
-  Typography,
-  Timeline,
-  Table,
-} from "antd";
-import useQuery from "base/hooks/query-param";
+import { useHistory } from 'react-router-dom';
+import { Form, Input, Button, Select, Card, Typography, Timeline, Table } from 'antd';
+import useQuery from 'base/hooks/query-param';
 const { Title } = Typography;
 
 const NewMicrofrontend: React.FC<{
@@ -31,18 +22,15 @@ const NewMicrofrontend: React.FC<{
 
   const [{ data: versions = [] }] = useLoggedApiRequest(`/versions?microfrontendId=${microfrontend.id}`);
 
-  const [
-    { data: result, loading, error },
-    createmicrofrontend,
-  ] = useLoggedApiRequest(
+  const [{ data: result, loading, error }, createmicrofrontend] = useLoggedApiRequest(
     {
-      url: `/microfrontends${isNew ? "" : `/${microfrontend.id}`}`,
-      method: isNew ? "POST" : "PUT",
+      url: `/microfrontends${isNew ? '' : `/${microfrontend.id}`}`,
+      method: isNew ? 'POST' : 'PUT',
     },
     { manual: true }
   );
 
-  const applicationId = useQuery().get("applicationId");
+  const applicationId = useQuery().get('applicationId');
   const onFinish = async (values: any) => {
     await createmicrofrontend({
       data: {
@@ -54,27 +42,27 @@ const NewMicrofrontend: React.FC<{
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
 
   const columns = [
     {
-      title: "Created at",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      title: 'Created at',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
     },
     {
-      title: "Action",
+      title: 'Action',
       render: (asd: any) => {
         return (
           <span>
@@ -94,15 +82,12 @@ const NewMicrofrontend: React.FC<{
   const handleSyncClick = async () => {
     await syncMicrofrontend();
     window.location.reload();
-  }
+  };
 
   if (result) return null;
 
   return (
-    <Card
-      title={isNew ? "Creating" : `Editing ${microfrontend.name}`}
-      style={{ margin: "32px" }}
-    >
+    <Card title={isNew ? 'Creating' : `Editing ${microfrontend.name}`} style={{ margin: '32px' }}>
       <Form
         labelCol={{ span: 2 }}
         name="basic"
@@ -110,17 +95,11 @@ const NewMicrofrontend: React.FC<{
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
-        <Form.Item
-          label="Name"
-          name="name"
-        >
+        <Form.Item label="Name" name="name">
           <Input />
         </Form.Item>
 
-        <Form.Item
-          label="Package name"
-          name="packageName"
-        >
+        <Form.Item label="Package name" name="packageName">
           <Input />
         </Form.Item>
 
@@ -130,7 +109,7 @@ const NewMicrofrontend: React.FC<{
           </Button>
           <Button type="ghost" onClick={handleSyncClick}>
             Sync Versions
-            </Button>
+          </Button>
         </Form.Item>
       </Form>
 

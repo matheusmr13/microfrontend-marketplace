@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
-import { Switch, Route, useHistory, Redirect } from "react-router-dom";
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 
-import Home from "./home";
-import Login from "modules/github/login";
-import Logout from "modules/account/logout";
-import LandingPage from "modules/landing";
-import useLoggedUser from "base/hooks/user";
-import { configureLoggedUser } from "base/hooks/request";
+import Home from './home';
+import Login from 'modules/github/login';
+import Logout from 'modules/account/logout';
+import LandingPage from 'modules/landing';
+import useLoggedUser from 'base/hooks/user';
+import { configureLoggedUser } from 'base/hooks/request';
 
-const LOGIN_URL = "/login";
-const LANDING_PAGE_URL = "/";
-const LOGGED_HOME_URL = "/home";
+const LOGIN_URL = '/login';
+const LANDING_PAGE_URL = '/';
+const LOGGED_HOME_URL = '/home';
 
 function Router() {
   const history = useHistory();

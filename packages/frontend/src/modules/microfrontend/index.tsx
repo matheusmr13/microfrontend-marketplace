@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
-import Details from "./details";
-import New from "./new";
-import List from "./list";
+import Details from './details';
+import New from './new';
+import List from './list';
 
 function MicrofrontendsHome() {
   let match = useRouteMatch();

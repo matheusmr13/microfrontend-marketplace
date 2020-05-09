@@ -1,44 +1,49 @@
-import React, { useState } from "react";
-import { useLoggedApiRequest, useGithubApiRequest } from "base/hooks/request";
-import Page from "base/components/page";
-import { Redirect, useParams } from "react-router-dom";
+import React, { useState } from 'react';
+import { useLoggedApiRequest, useGithubApiRequest } from 'base/hooks/request';
+import Page from 'base/components/page';
+import { Redirect, useParams } from 'react-router-dom';
 
-import { Descriptions, Button, Form, Input, Radio } from "antd";
-import useApiAction from "base/hooks/api-action";
-import useQuery from "base/hooks/query-param";
-import FetchApplication from "modules/application/fetch";
+import { Descriptions, Button, Form, Input, Radio } from 'antd';
+import useApiAction from 'base/hooks/api-action';
+import useQuery from 'base/hooks/query-param';
+import FetchApplication from 'modules/application/fetch';
 
 function ImportRepository(props: { application?: any }) {
   const { application } = props;
   const { owner, repositoryName } = useParams();
   const repositoryFullName = `${owner}/${repositoryName}`;
   const [form] = Form.useForm();
-  const [importType, setImportType] = useState("application");
+  const [importType, setImportType] = useState('application');
 
   const onFormChanged = (values: any) => {
     if (values.importType) setImportType(values.importType);
   };
-
 
   const shouldShowImportType = !application;
   const shouldShowApplicationIdField = !application && importType === 'application';
 
   const [{ data: repository, loading: loadingRepository }] = useGithubApiRequest(`/repos/${repositoryFullName}`);
 
-  const [{ data: importedApplication, loading: importingApplication }, importApplication] = useApiAction(`/applications/import`, {
-    message: { success: 'Application imported' }
-  });
-  const [{ data: importedMicrofrontend, loading: importingMicrofrotend }, importMicrofrontend] = useApiAction(`/microfrontends/import`, {
-    message: { success: 'Mifrofrontend imported' }
-  });
+  const [{ data: importedApplication, loading: importingApplication }, importApplication] = useApiAction(
+    `/applications/import`,
+    {
+      message: { success: 'Application imported' },
+    }
+  );
+  const [{ data: importedMicrofrontend, loading: importingMicrofrotend }, importMicrofrontend] = useApiAction(
+    `/microfrontends/import`,
+    {
+      message: { success: 'Mifrofrontend imported' },
+    }
+  );
 
   const onFinish = async (values: any) => {
-    if (values.importType === "application") {
+    if (values.importType === 'application') {
       await importApplication({
         data: {
           repositoryName: repositoryFullName,
           packageName: values.packageName,
-          name: values.name
+          name: values.name,
         },
       });
       return;
@@ -49,20 +54,16 @@ function ImportRepository(props: { application?: any }) {
         repositoryName: repositoryFullName,
         applicationId: application?.id || values.applicationId,
         packageName: values.packageName,
-        name: values.name
+        name: values.name,
       },
     });
   };
 
   if (!importingApplication && importedApplication) {
-    return (
-      <Redirect to={`../../../application/${importedApplication.id}`} />
-    );
+    return <Redirect to={`../../../application/${importedApplication.id}`} />;
   }
   if (!importingMicrofrotend && importedMicrofrontend) {
-    return (
-      <Redirect to={`../../../microfrontend/${importedMicrofrontend.id}`} />
-    );
+    return <Redirect to={`../../../microfrontend/${importedMicrofrontend.id}`} />;
   }
   if (loadingRepository) return <span>loading</span>;
 
@@ -71,7 +72,7 @@ function ImportRepository(props: { application?: any }) {
       form={form}
       initialValues={{
         importType,
-        name: repository.name
+        name: repository.name,
       }}
       onValuesChange={onFormChanged}
       onFinish={onFinish}
@@ -104,11 +105,7 @@ function ImportRepository(props: { application?: any }) {
       )}
 
       <div>
-        <Button
-          htmlType="submit"
-          type="primary"
-          disabled={importingApplication || importingMicrofrotend}
-        >
+        <Button htmlType="submit" type="primary" disabled={importingApplication || importingMicrofrotend}>
           Import
         </Button>
       </div>
@@ -125,6 +122,5 @@ export default () => {
     <FetchApplication title="Import repository" applicationId={importApplicationId}>
       {(application: any) => <ImportRepository application={application} />}
     </FetchApplication>
-  )
+  );
 };
-

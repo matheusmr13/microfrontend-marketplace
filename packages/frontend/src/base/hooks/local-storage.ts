@@ -1,11 +1,8 @@
-import { useState } from "react";
-function useLocalStorage(
-  key: string,
-  initialValue?: string
-): [string | undefined, Function, Function] {
+import { useState } from 'react';
+function useLocalStorage(key: string, initialValue?: string): [string | undefined, Function, Function] {
   const [storedValue, setStoredValue] = useState(() => {
     try {
-      const item = JSON.parse(window.localStorage.getItem(key) || "");
+      const item = JSON.parse(window.localStorage.getItem(key) || '');
       return item ? item : initialValue;
     } catch (error) {
       console.log(error);

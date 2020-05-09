@@ -1,9 +1,9 @@
-import React from "react";
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import React from 'react';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
-import Details from "./details";
-import List from "./list";
-import Deploy from "./deploy";
+import Details from './details';
+import List from './list';
+import Deploy from './deploy';
 
 function ApplicationHome() {
   let match = useRouteMatch();

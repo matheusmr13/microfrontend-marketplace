@@ -1,11 +1,11 @@
-import jwt from "jsonwebtoken";
-import User from "user/user";
+import jwt from 'jsonwebtoken';
+import User from 'user/user';
 
-const SECRET = "MY_COOL_SECRET";
+const SECRET = 'MY_COOL_SECRET';
 class Account {
   static validateToken(token: string) {
     try {
-      const [_, accessToken] = token.split(" ");
+      const [_, accessToken] = token.split(' ');
       const jwtPayload = <any>jwt.verify(accessToken, SECRET);
       return jwtPayload;
     } catch (e) {
@@ -26,7 +26,7 @@ class Account {
 
     return {
       access_token: token,
-      token_type: "bearer",
+      token_type: 'bearer',
     };
   }
 }

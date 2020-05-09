@@ -1,6 +1,6 @@
-import React from "react";
-import useLoggedUser from "../../base/hooks/user";
-import { Redirect } from "react-router-dom";
+import React from 'react';
+import useLoggedUser from '../../base/hooks/user';
+import { Redirect } from 'react-router-dom';
 
 function Logout() {
   const [auth, _, clearValue] = useLoggedUser();
@@ -9,7 +9,7 @@ function Logout() {
     clearValue();
     return <></>;
   }
-  window.location.href = "/";
+  window.location.href = '/';
   return <></>;
 }
 

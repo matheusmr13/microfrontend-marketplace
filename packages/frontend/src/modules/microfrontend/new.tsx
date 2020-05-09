@@ -1,5 +1,5 @@
-import React from "react";
-import MicrofrontendForm from "./form";
+import React from 'react';
+import MicrofrontendForm from './form';
 
 function NewMicrofrontend() {
   return <MicrofrontendForm microfrontend={{}} />;
