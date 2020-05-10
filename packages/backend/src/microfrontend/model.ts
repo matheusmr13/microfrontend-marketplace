@@ -11,10 +11,16 @@ enum APPROVAL_TYPE {
   AUTO_APPROVE = 'AUTO_APPROVE',
 }
 
+enum TYPE {
+  MICROFRONTEND,
+  CONTAINER,
+}
+
 interface IMicrofrontend {
   name: string;
   applicationId: string;
   packageName: string;
+  type?: TYPE;
 }
 
 @Entity({ namespace: 'testing', kind: 'microfrontend' })
@@ -30,6 +36,9 @@ class Microfrontend extends BasicEntity {
 
   @Column()
   public approvalType: APPROVAL_TYPE = APPROVAL_TYPE.NEEDS_REVISION;
+
+  @Column()
+  public type: TYPE = TYPE.MICROFRONTEND;
 
   static async createFromRepository(repository: any, payload: IMicrofrontend, ownerId: string) {
     const application = Microfrontend.create({
