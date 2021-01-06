@@ -10,7 +10,7 @@
   "dependencies": {
     "@types/gh-pages": "^2.2.0",
     "@types/node": "^13.13.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chalk": "^3.0.0",
     "commander": "^4.0.1",
     "gh-pages": "^2.2.0"
